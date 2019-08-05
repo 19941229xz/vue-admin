@@ -12,6 +12,9 @@ import '../static/css/templatemo-style.css'
 import VueScroller from "vue-scroller"
 Vue.use(VueScroller)
 
+import VeeValidate from 'vee-validate';
+Vue.use(VeeValidate);
+
 import axios from 'axios'
 // //配置mui的js  与css
 // import mui from '../static/mui/js/mui.min.js'
@@ -43,7 +46,7 @@ axios.interceptors.request.use(config => {
 	// config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 	return config;
 }, error => { //请求错误处理
-	
+
 	Promise.reject(error)
 });
 

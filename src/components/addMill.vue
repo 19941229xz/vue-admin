@@ -1,3 +1,5 @@
+
+
 <template>
 	<div class="hello">
 		<div class="container tm-mt-big tm-mb-big">
@@ -14,7 +16,8 @@
 								<!-- <form action="" class="tm-edit-product-form"> -->
 								<div class="form-group mb-3">
 									<label for="bitType">币种id</label>
-									<input id="bitType" type="text" v-model="mill.bitType" class="form-control validate" />
+									<input id="bitType" type="text" v-validate="'required|email'" name="mill.bitType" v-model="mill.bitType" class="form-control validate" />
+                  <span style="background:red;width:250px;">{{ errors.first('mill.bitType') }}</span>
 								</div>
 								<div class="form-group mb-3">
 									<label for="brand">品牌id</label>
