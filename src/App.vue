@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-     <nav class="navbar navbar-expand-xl">
+     <nav v-show="$route.name!='login'" class="navbar navbar-expand-xl">
         <div class="container h-100">
             <a class="navbar-brand" href="index.html">
                 <h1 class="tm-site-title mb-0">Product Admin</h1>
@@ -15,36 +15,36 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="#">
                             <i class="fas fa-tachometer-alt"></i>
-                            Dashboard
+                            主页
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <li v-for="item in menuList" class="nav-item dropdown" style="color: white;">
     
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                             <i class="far fa-file-alt"></i>
                             <span>
-                                Reports <i class="fas fa-angle-down"></i>
+                                {{item.menuName}} <i class="fas fa-angle-down"></i>
                             </span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Daily Report</a>
-                            <a class="dropdown-item" href="#">Weekly Report</a>
-                            <a class="dropdown-item" href="#">Yearly Report</a>
+                            <a v-for="childItem in item.childMenus" class="dropdown-item" :href="childItem.menuRoute">{{childItem.menuName}}</a>
+                            <!-- <a class="dropdown-item" href="#">Weekly Report</a>
+                            <a class="dropdown-item" href="#">Yearly Report</a> -->
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="products.html">
                             <i class="fas fa-shopping-cart"></i>
                             Products
                         </a>
-                    </li>
+                    </li> -->
     
                     <li class="nav-item">
                         <a class="nav-link" href="accounts.html">
                             <i class="far fa-user"></i>
-                            Accounts
+                            账户
                         </a>
                     </li>
                     <li class="nav-item dropdown">
@@ -84,14 +84,21 @@
 import jquery from '../static/js/jquery-3.3.1.min.js'  
 import moment from '../static/js/moment.min.js'  
 import Chart from '../static/js/Chart.min.js'  
-import bootstrap from '../static/js/bootstrap.min.js'  
-import tooplateScripts from '../static/js/tooplate-scripts.js' 
+import bootstrap from '../static/js/bootstrap.min.js'
+import tooplateScripts from '../static/js/tooplate-scripts.js'
+import menus from './router/menu.js'   //引入菜单数据
 
 	
 export default {
   name: 'App',
+  data(){
+	 return{
+		 menuList:[]
+	 } 
+  },
 	mounted:function(){
-		
+		this.menuList=menus.data
+		this.$log(this.menuList.length)
 	}
 }
 </script>

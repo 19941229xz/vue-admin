@@ -4,16 +4,40 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+// import VueI18n from 'vue-i18n';  //  支持中文
+// Vue.use(VueI18n)
+
 
 import '../static/css/fontawesome.min.css'
 import '../static/css/bootstrap.min.css'
 import '../static/css/templatemo-style.css'
+import '../static/css/common.css'
 
 import VueScroller from "vue-scroller"
 Vue.use(VueScroller)
 
+// import VeeValidate, {Validator} from 'vee-validate'
+// import zh from 'vee-validate/dist/locale/zh_CN' //引入中文文件
+// 
+// Vue.use(VeeValidate);
 import VeeValidate from 'vee-validate';
-Vue.use(VeeValidate);
+import zh_CN from 'vee-validate/dist/locale/zh_CN'
+import VueI18n from 'vue-i18n';
+Vue.use(VueI18n)
+const i18n = new VueI18n({
+	locale: 'zh_CN',
+})
+Vue.use(VeeValidate, {
+	// validity: true,
+	aria: true,
+	i18n,
+	i18nRootKey: 'validation',
+	dictionary: {
+		zh_CN
+	}
+});
+
+
 
 import axios from 'axios'
 // //配置mui的js  与css
@@ -51,28 +75,28 @@ axios.interceptors.request.use(config => {
 });
 
 axios.interceptors.response.use(
-    response => {  //成功请求到数据
-        // layer.closeAll()
-				layer.close(loadTip)
-        // //这里根据后端提供的数据进行对应的处理
-        // if (response.data.result === 'TRUE') {
-        //     return response.data;
-        // } else {
-        //     app.$vux.toast.show({  //常规错误处理
-        //         type: 'warn',
-        //         text: response.data.data.msg
-        //     });
-        // }
-				return response
-    },
-    error => {  //响应错误处理
-				layer.close(loadTip)
-        console.log('error 正式环境需要跳转到登录页');
-        console.log(error);
-        console.log(JSON.stringify(error));
-				router.push('/')
-        return Promise.reject(error)
-    }
+	response => { //成功请求到数据
+		// layer.closeAll()
+		layer.close(loadTip)
+		// //这里根据后端提供的数据进行对应的处理
+		// if (response.data.result === 'TRUE') {
+		//     return response.data;
+		// } else {
+		//     app.$vux.toast.show({  //常规错误处理
+		//         type: 'warn',
+		//         text: response.data.data.msg
+		//     });
+		// }
+		return response
+	},
+	error => { //响应错误处理
+		layer.close(loadTip)
+		console.log('error 正式环境需要跳转到登录页');
+		console.log(error);
+		console.log(JSON.stringify(error));
+		router.push('/')
+		return Promise.reject(error)
+	}
 )
 
 
@@ -108,51 +132,53 @@ Vue.prototype.$deleteCookie = function(name) {
 	}
 }
 
-Vue.prototype.$errMsg=function(msg){
+Vue.prototype.$errMsg = function(msg) {
 	layer.open({
 		type: 0,
 		content: msg,
-		time: 2,
+		time: 1,
 		style: 'border:none; background-color:red; color:#fff;',
-		shade:true
+		shade: true
 	})
 }
 
-Vue.prototype.$infoMsg=function(msg){
+Vue.prototype.$infoMsg = function(msg) {
 	layer.open({
 		type: 0,
 		content: msg,
-		time: 2,
+		time: 1,
 		style: 'border:none; background-color:green; color:#fff;',
-		shade:true
+		shade: true
 	})
 }
 
-Vue.prototype.$warnMsg=function(msg){
+Vue.prototype.$warnMsg = function(msg) {
 	layer.open({
 		type: 0,
 		content: msg,
-		time: 2,
+		time: 1,
 		style: 'border:none; background-color:orange; color:#fff;',
-		shade:true
+		shade: true
 	})
 }
 
-var isDev=true
-Vue.prototype.$log=function(log){
-	if(isDev){
+var isDev = true
+Vue.prototype.$log = function(log) {
+	if (isDev) {
 		console.log(log)
 	}
 }
 // 添加全局用户信息
-Vue.prototype.$userInfo={}
+Vue.prototype.$userInfo = {}
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
+	el: '#app',
+	router,
+	components: {
+		App
+	},
+	template: '<App/>'
 })

@@ -6,55 +6,29 @@
 					<div class="tm-bg-primary-dark tm-block tm-block-h-auto">
 						<div class="row">
 							<div class="col-12">
-								<h2 class="tm-block-title d-inline-block">新增矿机数据</h2>
+								<h2 class="tm-block-title d-inline-block">新增考试结果数据</h2>
 							</div>
 						</div>
 						<div class="row tm-edit-product-row">
 							<div class="col-xl-6 col-lg-6 col-md-12">
 								<!-- <form action="" class="tm-edit-product-form"> -->
-								<div class="form-group mb-3">
-									<label for="bitType">币种id</label>
-									<input id="bitType" type="text" v-validate="'required'" name="币种id" v-model="mill.bitType" class="form-control validate" />
-									<span class="validateErrorSpan">{{ errors.first('币种id') }}</span>
-								</div>
-								<div class="form-group mb-3">
-									<label for="brand">品牌id</label>
-									<input id="brand" type="text" v-model="mill.brand" class="form-control validate" />
-								</div>
-								<div class="form-group mb-3">
-									<label for="hasGPU">是否有显卡（1有 2没有 )</label>
-									<input id="hasGPU" type="text" v-model="mill.hasGPU" class="form-control validate" />
-								</div>
-								<div class="form-group mb-3">
-									<label for="isUsed">是否二手（1二手 2新货）</label>
-									<input id="isUsed" type="text" v-model="mill.isUsed" class="form-control validate" />
-								</div>
-								<div class="form-group mb-3">
-									<label for="manufactureDate">生产日期</label>
-									<input id="manufactureDate" type="text" v-model="mill.manufactureDate" class="form-control validate" />
-								</div>
-								<div class="form-group mb-3">
-									<label for="model">型号id(关联型号表)</label>
-									<input id="model" type="text" v-model="mill.model" class="form-control validate" />
-								</div>
-
-								<div class="form-group mb-3">
-									<label for="num">数量 </label>
-									<input id="num" type="text" v-model="mill.num" class="form-control validate" />
-								</div>
-								<div class="form-group mb-3">
-									<label for="orderId">订单号(选填)</label>
-									<input id="orderId" type="text" v-model="mill.orderId" class="form-control validate" />
-								</div>
-								<div class="form-group mb-3">
-									<label for="powerContent">电源详情（关联电源表</label>
-									<input id="powerContent" type="text" v-model="mill.powerContent" class="form-control validate" />
-								</div>
-								<div class="form-group mb-3">
-									<label for="price">价格</label>
-									<input id="price" type="text" v-model="mill.price" class="form-control validate" />
-								</div>
-								<!-- <div class="form-group mb-3">
+								
+								                                                                                                                                            <div class="form-group mb-3">
+                                        <label for="userId">考试用户id</label>
+                                        <input id="userId" type="text" v-validate="'required'" name="考试用户id" v-model="examresult.userId" class="form-control validate" />
+                                        <span class="validateErrorSpan">{{ errors.first('考试用户id') }}</span>
+                                    </div>
+                                                                                                                                            <div class="form-group mb-3">
+                                        <label for="questionJobTypeId">问题所属得岗位类型id</label>
+                                        <input id="questionJobTypeId" type="text" v-validate="'required'" name="问题所属得岗位类型id" v-model="examresult.questionJobTypeId" class="form-control validate" />
+                                        <span class="validateErrorSpan">{{ errors.first('问题所属得岗位类型id') }}</span>
+                                    </div>
+                                                                                                                                            <div class="form-group mb-3">
+                                        <label for="score">考试分数</label>
+                                        <input id="score" type="text" v-validate="'required'" name="考试分数" v-model="examresult.score" class="form-control validate" />
+                                        <span class="validateErrorSpan">{{ errors.first('考试分数') }}</span>
+                                    </div>
+                                                                    								<!-- <div class="form-group mb-3">
 										<label for="description">Description</label>
 										<textarea class="form-control validate" rows="3" required></textarea>
 									</div>
@@ -91,7 +65,7 @@
 								</div>
 							</div>
 							<div class="col-12">
-								<button @click="addMill" class="btn btn-primary btn-block text-uppercase">确认添加</button>
+								<button @click="addExamresult" class="btn btn-primary btn-block text-uppercase">确认添加</button>
 							</div>
 							<!-- </form> -->
 
@@ -106,25 +80,20 @@
 
 <script>
 	export default {
-		name: 'addMill',
+		name: 'addExamresult',
 		data() {
 			return {
-				mill: {
-					"brand": 1,
-					"model": 1,
-					"powerContent": 1,
-					"orderId": 23123123,
-					"price": 2000,
-					"bitType": 1,
-					"hasGPU": 1,
-					"manufactureDate": "2019-08-04T02:28:21.000+0000",
-					"num": 10,
-					"isUsed": 1
-				}
+				examresult: {
+					
+                                        id:'',
+                                        userId:'',
+                                        questionJobTypeId:'',
+                                        score:'',
+                    				}
 			}
 		},
 		methods: {
-			addMill: function() {
+			addExamresult: function() {
 				this.$validator.validate().then(valid => {
 					if (!valid) {
 						// do stuff if not valid.
@@ -132,12 +101,12 @@
 						return
 					} else {
 						var that = this
-						delete this.mill.manufactureDate
-						this.$http.post('/renrenkuang/addMill', that.mill).then(res => {
+						// delete some date field
+						this.$http.post('/msbd/addExamresult', that.examresult).then(res => {
 							if (res.data.code == 200) {
 								this.$log(res)
 								this.$infoMsg('添加成功')
-								this.$router.push('/mill')
+								this.$router.push('/examresult')
 							} else {
 								this.$errMsg('添加失败')
 							}
