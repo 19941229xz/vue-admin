@@ -1,9 +1,9 @@
 <template>
 	<div class="hello">
 		<div class="container mt-5">
-        	<div class="row tm-content-row">
+			<div class="row tm-content-row">
 				<div class="col-sm-12">
-					<input class="superSearch inp"  type="text" v-model="superSearchKeyWord" placeholder="高级检索..." />
+					<input class="superSearch inp" type="text" v-model="superSearchKeyWord" placeholder="高级检索..." />
 				</div>
 			</div>
 			<div class="row tm-content-row">
@@ -14,34 +14,72 @@
 								<thead>
 									<tr>
 										<th scope="col">&nbsp;</th>
-										
-										
-                                                                                    <th scope="col">主键 </th>     
-                                                                                     <th scope="col">考试用户id </th>     
-                                                                                     <th scope="col">问题所属得岗位类型id </th>     
-                                                                                     <th scope="col">考试分数 </th>     
-                                         										<th scope="col">&nbsp;</th>
+
+
+										<!-- <th scope="col">主键 </th> -->
+										<!-- <th scope="col">考试用户id </th> -->
+										<th scope="col">考试人昵称 </th>
+										<th scope="col">考试人真实姓名 </th>
+										<!-- <th scope="col">问题所属得岗位类型id </th> -->
+										<th scope="col">问题所属岗位名称 </th>
+										<th scope="col">考试分数 </th>
+										<!-- <th scope="col">考试者所属公司id </th> -->
+										<th scope="col">考试者所属公司名称 </th>
+										<!-- <th scope="col">考试者所属班级id </th> -->
+										<th scope="col">考试者所属班级名称 </th>
+										<!-- <th scope="col">所属试卷id </th> -->
+										<th scope="col">所属试卷名称 </th>
+										<th scope="col">是否完成考试 1未完成 2已完成 </th>
+										<th scope="col">考试总题数 </th>
+										<th scope="col">错题数 </th>
+										<th scope="col">&nbsp;</th>
 									</tr>
 								</thead>
-                                <tbody>
+								<tbody>
 									<tr v-for="item in examresultList">
-										<th scope="row"><input type="checkbox" v-model="checkedItem" :value="item.id" /></th>
-										
-										                                            
-                                            <td @click="editItem(item)">{{item.id}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.userId}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.questionJobTypeId}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.score}}</td>
-                                                                                 
-                                        
-										<td>
+										<th v-show="$superAdminMode" scope="row"><input type="checkbox" v-model="checkedItem" :value="item.id" /></th>
+										<th v-show="!$superAdminMode" scope="row">&nbsp;</th>
+
+
+										<!-- <td @click="editItem(item)">{{item.id}}</td> -->
+
+										<!-- <td @click="editItem(item)">{{item.userId}}</td> -->
+
+										<td @click="editItem(item)">{{item.userNickName}}</td>
+
+										<td @click="editItem(item)">{{item.userRealName}}</td>
+
+										<!-- <td @click="editItem(item)">{{item.questionJobTypeId}}</td> -->
+
+										<td @click="editItem(item)">{{item.questionJobTypeName}}</td>
+
+										<td @click="editItem(item)">{{item.score}}</td>
+
+										<!-- <td @click="editItem(item)">{{item.companyId}}</td> -->
+
+										<td @click="editItem(item)">{{item.companyName}}</td>
+
+										<!-- <td @click="editItem(item)">{{item.banjiId}}</td> -->
+
+										<td @click="editItem(item)">{{item.banjiName}}</td>
+
+										<!-- <td @click="editItem(item)">{{item.exampaperId}}</td> -->
+
+										<td @click="editItem(item)">{{item.exampaperName}}</td>
+
+										<td @click="editItem(item)">{{item.isFinished}}</td>
+
+										<td @click="editItem(item)">{{item.totalQuestionCount}}</td>
+
+										<td @click="editItem(item)">{{item.wrongCount}}</td>
+
+
+										<td v-show="$superAdminMode">
 											<a @click="deleteItem(item)" class="tm-product-delete-link">
 												<i class="far fa-trash-alt tm-product-delete-icon"></i>
 											</a>
 										</td>
+										<td v-show="!$superAdminMode" scope="row">&nbsp;</td>
 									</tr>
 
 								</tbody>
@@ -49,11 +87,11 @@
 
 						</div>
 						<!-- table container -->
-						
-						<button @click="addExamresult" class="btn btn-primary btn-block text-uppercase">
+
+						<button v-show="$superAdminMode" @click="addExamresult" class="btn btn-primary btn-block text-uppercase">
 							添加数据
 						</button>
-						<button @click="batchDelete" class="btn btn-primary btn-block text-uppercase">
+						<button v-show="$superAdminMode" @click="batchDelete" class="btn btn-primary btn-block text-uppercase">
 							批量删除
 						</button>
 					</div>
@@ -62,7 +100,7 @@
 			</div>
 		</div>
 	</div>
-</template>	
+</template>
 
 
 <script>
@@ -85,11 +123,11 @@
 				},
 				isLastPage: false,
 				scrollTop: 1,
-                superSearchKeyWord:''
-                
+				superSearchKeyWord: ''
+
 			}
 		},
-        methods: {
+		methods: {
 			refreshItemList: function() {
 				this.searchData.pageNum = 1
 				this.isLastPage = false
@@ -101,25 +139,25 @@
 				if (this.isLastPage) {
 					return
 				}
-                this.$http.post('/msbd/getAllExamresult', that.searchData).then(res =>{
-                                    if (res.data.code == 200) {
-                                        if (!res.data.content.isLastPage) {
-                                            this.examresultList = this.examresultList.concat(res.data.content.list)
-                                        } else {
-                                            this.$infoMsg('没有更多数据')
-                                            this.isLastPage = true
-                                        }
-                                        this.$log(this.examresultList)
-                                    } else {
-                                        this.$errMsg('考试结果数据加载失败')
-                                    }
-                                }).catch(err => {
-                                    this.$errMsg('考试结果数据加载失败')
-                                    console.log(err)
-                                })
-				
+				this.$http.post('/msbd/getAllExamresult', that.searchData).then(res => {
+					if (res.data.code == 200) {
+						if (!res.data.content.isLastPage) {
+							this.examresultList = this.examresultList.concat(res.data.content.list)
+						} else {
+							this.$infoMsg('没有更多数据')
+							this.isLastPage = true
+						}
+						this.$log(this.examresultList)
+					} else {
+						this.$errMsg('考试结果数据加载失败')
+					}
+				}).catch(err => {
+					this.$errMsg('考试结果数据加载失败')
+					console.log(err)
+				})
+
 			},
-            getExamresultList: function() {
+			getExamresultList: function() {
 				var that = this
 				this.$http.post('/msbd/getAllExamresult', that.searchData).then(res => {
 					if (res.data.code == 200) {
@@ -157,7 +195,9 @@
 
 				// this.getMoreExamresultList()
 			},
-            editItem: function(item) {
+			editItem: function(item) {
+				this.$warnMsg('暂不支持编辑考试结果')
+				return
 				this.$log(item.id)
 				this.$router.push({
 					path: '/editExamresult',
@@ -192,7 +232,7 @@
 					console.log(err)
 				})
 			},
-            batchDelete: function() {
+			batchDelete: function() {
 				if (this.checkedItem.length == 0) {
 					this.$log(this.checkedItem)
 					this.$warnMsg('未选择要删除得数据')
@@ -230,8 +270,8 @@
 					this.refreshItemList()
 				}
 			},
-            superSearchKeyWord:function(){
-				this.searchData.superSearchKeyWord=this.superSearchKeyWord
+			superSearchKeyWord: function() {
+				this.searchData.superSearchKeyWord = this.superSearchKeyWord
 				this.getExamresultList()
 			}
 		},

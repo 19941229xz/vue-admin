@@ -1,9 +1,10 @@
 <template>
 	<div class="hello">
 		<div class="container mt-5">
-        	<div class="row tm-content-row">
+			<!-- <h2 class="tm-block-title">List of Accounts</h2> -->
+			<div class="row tm-content-row">
 				<div class="col-sm-12">
-					<input class="superSearch inp"  type="text" v-model="superSearchKeyWord" placeholder="高级检索..." />
+					<input class="superSearch inp" type="text" v-model="superSearchKeyWord" placeholder="高级检索..." />
 				</div>
 			</div>
 			<div class="row tm-content-row">
@@ -14,76 +15,78 @@
 								<thead>
 									<tr>
 										<th scope="col">&nbsp;</th>
-										
-										
-                                                                                    <th scope="col">主键 </th>     
-                                                                                     <th scope="col">试卷名称 </th>     
-                                                                                     <th scope="col">出题人id </th>     
-                                                                                     <th scope="col">命题时间 </th>     
-                                                                                     <th scope="col">出题人头像 </th>     
-                                                                                     <th scope="col">出题人昵称 </th>     
-                                                                                     <th scope="col">出题人真实姓名 </th>     
-                                                                                     <th scope="col">试卷所属得岗位类型id </th>     
-                                                                                     <th scope="col">考试规定时长（单位秒） </th>     
-                                                                                     <th scope="col">试卷所属班级id </th>     
-                                                                                     <th scope="col">所属公司id </th>     
-                                                                                     <th scope="col">所属学校id </th>     
-                                                                                     <th scope="col">试卷可浏览级别 1完全公开 2对学校或公司公开 3只对班级公开 </th>     
-                                                                                     <th scope="col">试卷是否审核 1 未审核  2已审核 </th>     
-                                                                                     <th scope="col">审核人id </th>     
-                                                                                     <th scope="col">审核时间 </th>     
-                                                                                     <th scope="col">审核人真实姓名 </th>     
-                                                                                     <th scope="col">审核人昵称 </th>     
-                                         										<th scope="col">&nbsp;</th>
+
+
+										<th scope="col">主键 </th>
+										<th scope="col">试卷名称 </th>
+										<th scope="col">出题人id </th>
+										<th scope="col">命题时间 </th>
+										<th scope="col">出题人头像 </th>
+										<th scope="col">出题人昵称 </th>
+										<th scope="col">出题人真实姓名 </th>
+										<th scope="col">试卷所属得岗位类型id </th>
+										<th scope="col">考试规定时长（单位秒） </th>
+										<th scope="col">试卷所属班级id </th>
+										<th scope="col">所属公司id </th>
+										<th scope="col">所属学校id </th>
+										<th scope="col">试卷可浏览级别 1完全公开 2对学校或公司公开 3只对班级公开 </th>
+										<th scope="col">试卷是否审核 1 未审核 2已审核 </th>
+										<th scope="col">审核人id </th>
+										<th scope="col">审核时间 </th>
+										<th scope="col">审核人真实姓名 </th>
+										<th scope="col">审核人昵称 </th>
+										<th scope="col">&nbsp;</th>
 									</tr>
 								</thead>
-                                <tbody>
+								<tbody>
 									<tr v-for="item in exampaperList">
-										<th scope="row"><input type="checkbox" v-model="checkedItem" :value="item.id" /></th>
-										
-										                                            
-                                            <td @click="editItem(item)">{{item.id}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.examPaperName}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.createUserId}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.createDate}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.userHeadPic}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.userNickName}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.userRealName}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.questionJobTypeId}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.examTime}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.banjiId}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.companyId}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.schoolId}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.publicLevel}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.isChecked}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.checkUserId}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.checkDate}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.checkUserRealName}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.checkUserNickName}}</td>
-                                                                                 
-                                        
-										<td>
+										<th v-show="$superAdminMode" scope="row"><input type="checkbox" v-model="checkedItem" :value="item.id" /></th>
+										<th v-show="!$superAdminMode" scope="row">&nbsp;</th>
+
+
+										<td @click="editItem(item)">{{item.id}}</td>
+
+										<td @click="editItem(item)">{{item.examPaperName}}</td>
+
+										<td @click="editItem(item)">{{item.createUserId}}</td>
+
+										<td @click="editItem(item)">{{item.createDate}}</td>
+
+										<td @click="editItem(item)">{{item.userHeadPic}}</td>
+
+										<td @click="editItem(item)">{{item.userNickName}}</td>
+
+										<td @click="editItem(item)">{{item.userRealName}}</td>
+
+										<td @click="editItem(item)">{{item.questionJobTypeId}}</td>
+
+										<td @click="editItem(item)">{{item.examTime}}</td>
+
+										<td @click="editItem(item)">{{item.banjiId}}</td>
+
+										<td @click="editItem(item)">{{item.companyId}}</td>
+
+										<td @click="editItem(item)">{{item.schoolId}}</td>
+
+										<td @click="editItem(item)">{{item.publicLevel}}</td>
+
+										<td @click="editItem(item)">{{item.isChecked}}</td>
+
+										<td @click="editItem(item)">{{item.checkUserId}}</td>
+
+										<td @click="editItem(item)">{{item.checkDate}}</td>
+
+										<td @click="editItem(item)">{{item.checkUserRealName}}</td>
+
+										<td @click="editItem(item)">{{item.checkUserNickName}}</td>
+
+
+										<td v-show="$superAdminMode">
 											<a @click="deleteItem(item)" class="tm-product-delete-link">
 												<i class="far fa-trash-alt tm-product-delete-icon"></i>
 											</a>
 										</td>
+										<td v-show="!$superAdminMode" scope="row">&nbsp;</td>
 									</tr>
 
 								</tbody>
@@ -91,11 +94,11 @@
 
 						</div>
 						<!-- table container -->
-						
+
 						<button @click="addExampaper" class="btn btn-primary btn-block text-uppercase">
 							添加数据
 						</button>
-						<button @click="batchDelete" class="btn btn-primary btn-block text-uppercase">
+						<button v-show="$superAdminMode" @click="batchDelete" class="btn btn-primary btn-block text-uppercase">
 							批量删除
 						</button>
 					</div>
@@ -104,7 +107,7 @@
 			</div>
 		</div>
 	</div>
-</template>	
+</template>
 
 
 <script>
@@ -127,11 +130,14 @@
 				},
 				isLastPage: false,
 				scrollTop: 1,
-                superSearchKeyWord:''
-                
+				superSearchKeyWord: '',
+				userInfo:{
+					
+				}
+
 			}
 		},
-        methods: {
+		methods: {
 			refreshItemList: function() {
 				this.searchData.pageNum = 1
 				this.isLastPage = false
@@ -143,26 +149,31 @@
 				if (this.isLastPage) {
 					return
 				}
-                this.$http.post('/msbd/getAllExampaper', that.searchData).then(res =>{
-                                    if (res.data.code == 200) {
-                                        if (!res.data.content.isLastPage) {
-                                            this.exampaperList = this.exampaperList.concat(res.data.content.list)
-                                        } else {
-                                            this.$infoMsg('没有更多数据')
-                                            this.isLastPage = true
-                                        }
-                                        this.$log(this.exampaperList)
-                                    } else {
-                                        this.$errMsg('试卷数据加载失败')
-                                    }
-                                }).catch(err => {
-                                    this.$errMsg('试卷数据加载失败')
-                                    console.log(err)
-                                })
-				
+				this.$http.post('/msbd/getAllExampaper', that.searchData).then(res => {
+					if (res.data.code == 200) {
+						if (!res.data.content.isLastPage) {
+							this.exampaperList = this.exampaperList.concat(res.data.content.list)
+						} else {
+							this.$infoMsg('没有更多数据')
+							this.isLastPage = true
+						}
+						this.$log(this.exampaperList)
+					} else {
+						this.$errMsg('试卷数据加载失败')
+					}
+				}).catch(err => {
+					this.$errMsg('试卷数据加载失败')
+					console.log(err)
+				})
+
 			},
-            getExampaperList: function() {
+			getExampaperList: function() {
 				var that = this
+				if(this.$superAdminMode==false){ // 如果不是超级管理员模式  那么用户只能看见自己所属公司创建的数据  但是只能修改自己创建的
+					that.searchData.model.companyId=that.$getCookie('companyId')
+				}else{
+					delete that.searchData.model.companyId
+				}
 				this.$http.post('/msbd/getAllExampaper', that.searchData).then(res => {
 					if (res.data.code == 200) {
 						this.exampaperList = res.data.content.list
@@ -199,7 +210,12 @@
 
 				// this.getMoreExampaperList()
 			},
-            editItem: function(item) {
+			editItem: function(item) {
+				//在非超管模式  用户只允许修改自己创建的试卷
+				if(!this.$superAdminMode&&this.$getCookie('userId')!=item.createUserId){
+					this.$warnMsg('你无权编辑他人创建的试卷')
+					return
+				}
 				this.$log(item.id)
 				this.$router.push({
 					path: '/editExampaper',
@@ -234,7 +250,7 @@
 					console.log(err)
 				})
 			},
-            batchDelete: function() {
+			batchDelete: function() {
 				if (this.checkedItem.length == 0) {
 					this.$log(this.checkedItem)
 					this.$warnMsg('未选择要删除得数据')
@@ -256,8 +272,10 @@
 					this.$errMsg('批量删除失败')
 					console.log(err)
 				})
+			},
+			getUserInfo:function(){
+				
 			}
-
 		},
 		filters: {
 			dateformat: function(val) {
@@ -272,8 +290,8 @@
 					this.refreshItemList()
 				}
 			},
-            superSearchKeyWord:function(){
-				this.searchData.superSearchKeyWord=this.superSearchKeyWord
+			superSearchKeyWord: function() {
+				this.searchData.superSearchKeyWord = this.superSearchKeyWord
 				this.getExampaperList()
 			}
 		},

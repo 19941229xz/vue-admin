@@ -20,13 +20,23 @@ Vue.use(VueScroller)
 // import zh from 'vee-validate/dist/locale/zh_CN' //引入中文文件
 // 
 // Vue.use(VeeValidate);
-import VeeValidate from 'vee-validate';
+import VeeValidate, {
+	Validator
+} from 'vee-validate';
 import zh_CN from 'vee-validate/dist/locale/zh_CN'
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n)
 const i18n = new VueI18n({
 	locale: 'zh_CN',
 })
+Validator.extend('mobile', {
+	messages: {
+		en: field => field + '必须是11位手机号码',
+	},
+	validate: value => {
+		return value.length == 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)
+	}
+});
 Vue.use(VeeValidate, {
 	// validity: true,
 	aria: true,
@@ -36,6 +46,25 @@ Vue.use(VeeValidate, {
 		zh_CN
 	}
 });
+
+function getCookie(name) {
+	//console.log(name)
+	var arr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+	//console.log(arr)
+	if (arr != null) return unescape(arr[2]);
+	return null;
+}
+
+function setCookie(name, value, time) {
+	//此 cookie 将被保存 1 小时
+	// var hour = 1;
+	var exp = new Date();
+	exp.setTime(exp.getTime() + time * 1000);
+	document.cookie = name + "=" + value + ";expires=" + exp.toGMTString();
+}
+
+// 超级管理员模式
+Vue.prototype.$superAdminMode = getCookie('roleId') == 1 ? true : false
 
 
 
@@ -56,12 +85,28 @@ Vue.config.productionTip = false
 // });
 // layer.close(loadTip)
 var loadTip;
+var tipCount = 0
 // 配置axios相关属性
 axios.interceptors.request.use(config => {
+	// cookie中获取userId   和当前路由名称
+	let userId = Vue.prototype.$getCookie('userId')
+	let routeName = router.currentRoute.name
+	Vue.prototype.$log(userId)
+	Vue.prototype.$log(routeName)
+
+	if (userId == null || userId == '') {
+		if (routeName.indexOf('ogin') <= -1) {
+			setCookie('lastHref', window.location.href, 30 * 60)
+			router.push('/login')
+		}
+	}
+
 	loadTip = layer.open({
 		type: 2,
 		content: '加载中'
 	});
+
+
 	// config.method === 'post' ?
 	// 	config.data = qs.stringify({ ...config.data
 	// 	}) :
@@ -70,7 +115,7 @@ axios.interceptors.request.use(config => {
 	// config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 	return config;
 }, error => { //请求错误处理
-
+	layer.close(loadTip)
 	Promise.reject(error)
 });
 
@@ -87,14 +132,21 @@ axios.interceptors.response.use(
 		//         text: response.data.data.msg
 		//     });
 		// }
+		// console.log($route.name)
+
 		return response
 	},
 	error => { //响应错误处理
 		layer.close(loadTip)
+
 		console.log('error 正式环境需要跳转到登录页');
 		console.log(error);
 		console.log(JSON.stringify(error));
-		router.push('/')
+		//如果是在登录页出错不做跳转
+		if (router.currentRoute.name.indexOf('ogin') <= -1) {
+			router.push('/login')
+		}
+
 		return Promise.reject(error)
 	}
 )
@@ -112,11 +164,11 @@ Vue.prototype.$getCookie = function(name) {
 	if (arr != null) return unescape(arr[2]);
 	return null;
 }
-Vue.prototype.$setCookie = function(name, value) {
+Vue.prototype.$setCookie = function(name, value, time) {
 	//此 cookie 将被保存 1 小时
-	var hour = 1;
+	// var hour = 1;
 	var exp = new Date();
-	exp.setTime(exp.getTime() + hour * 60 * 60 * 1000);
+	exp.setTime(exp.getTime() + time * 1000);
 	document.cookie = name + "=" + value + ";expires=" + exp.toGMTString();
 }
 Vue.prototype.$deleteCookie = function(name) {
@@ -131,6 +183,17 @@ Vue.prototype.$deleteCookie = function(name) {
 		// document.cookie = address + "=" + adss + ";expires=" + exp.toGMTString();
 	}
 }
+Vue.prototype.$clearAllCookie = function() {
+	var date = new Date();
+	date.setTime(date.getTime() - 10000);
+	var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+	console.log("需要删除的cookie名字：" + keys);
+	if (keys) {
+		for (var i = keys.length; i--;)
+			document.cookie = keys[i] + "=0; expire=" + date.toGMTString() + "; path=/";
+	}
+}
+
 
 Vue.prototype.$errMsg = function(msg) {
 	layer.open({

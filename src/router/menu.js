@@ -1,4 +1,4 @@
-var data = [
+var dataFroSuperAdmin = [
 	
 	{
 		menuName:'试题',
@@ -49,6 +49,46 @@ var data = [
 	
 ]
 
+
+var dataFroGeneralUser = [
+	
+	{
+		menuName:'试题',
+		menuRoute:'',
+		childMenus:[
+			{
+				menuName:'试题',
+				menuRoute:'#/question'
+			},
+			{
+				menuName:'试卷',
+				menuRoute:'#/exampaper'
+			},
+			{
+				menuName:'试题所属职位',
+				menuRoute:'#/questionjobtype'
+			}
+		]
+	},
+	{
+		menuName:'用户',
+		menuRoute:'',
+		childMenus:[
+			{
+				menuName:'考试结果',
+				menuRoute:'#/examresult'
+			},
+			{
+				menuName:'试题评论',
+				menuRoute:'#/questioncomment'
+			}
+		]
+	}
+	
+	
+	
+]
+
 export default{
-	data
+	dataFroGeneralUser,dataFroSuperAdmin
 }

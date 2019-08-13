@@ -10,14 +10,25 @@
 							</div>
 						</div>
 						<div class="row tm-edit-product-row">
-							<div class="col-xl-6 col-lg-6 col-md-12">
+							<div class="col-xl-12 col-lg-12 col-md-12">
 								<!-- <form action="" method="post" class="tm-edit-product-form"> -->
-								                                                                                                                                <div class="form-group mb-3">
+								<div v-show="$superAdminMode" class="form-group mb-3">
+									<label for="isChecked">审核状态</label>
+									<!-- <input id="isChecked" type="text" v-validate="'required'" name="审核状态" v-model="questionjobtype.isChecked"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('审核状态') }}</span> -->
+									<select class="custom-select" v-model="questionjobtype.isChecked">
+										<option value="1">未审核</option>
+										<option value="2">已审核</option>
+									</select>
+								</div>
+								<div class="form-group mb-3">
 									<label for="questionJobTypeName">问题所属职位名称</label>
-									<input id="questionJobTypeName" type="text" v-validate="'required'" name="问题所属职位名称" v-model="questionjobtype.questionJobTypeName" class="form-control validate" />
+									<input id="questionJobTypeName" type="text" v-validate="'required'" name="问题所属职位名称" v-model="questionjobtype.questionJobTypeName"
+									 class="form-control validate" />
 									<span class="validateErrorSpan">{{ errors.first('问题所属职位名称') }}</span>
 								</div>
-                                                                								
+
 								<!-- <div class="form-group mb-3">
 									<label for="description">Description</label>
 									<textarea class="form-control validate tm-small" rows="5" required>Lorem ipsum dolor amet gentrify glossier locavore messenger bag chillwave hashtag irony migas wolf kale chips small batch kogi direct trade shaman.</textarea>
@@ -46,7 +57,7 @@
 								</div> -->
 
 							</div>
-							<div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
+							<!-- <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
 								<div class="tm-product-img-edit mx-auto">
 									<img src="../../static/img/product-image.jpg" alt="Product image" class="img-fluid d-block mx-auto">
 									<img src="http:\/\/placehold.it\/600x600" alt="Product image" class="img-fluid d-block mx-auto">
@@ -57,7 +68,7 @@
 									<input id="fileInput" type="file" style="display:none;" />
 									<input type="button" class="btn btn-primary btn-block mx-auto" value="CHANGE IMAGE NOW" onclick="document.getElementById('fileInput').click();" />
 								</div>
-							</div>
+							</div> -->
 							<div class="col-12">
 								<button @click="saveQuestionjobtype" class="btn btn-primary btn-block text-uppercase">保存</button>
 								<button @click="toQuestionjobtypeList" class="btn btn-primary btn-block text-uppercase">返回试题所属职位列表</button>
@@ -76,60 +87,60 @@
 		name: 'editQuestionjobtype',
 		data() {
 			return {
-				questionjobtype:{
-                	                    id:'',
-                                        questionJobTypeName:'',
-                                    },
-				itemId:1
+				questionjobtype: {
+					id: '',
+					questionJobTypeName: '',
+					isChecked:''
+				},
+				itemId: 1
 			}
 		},
-		methods:{
-			getQuestionjobtypeById:function(id){
-				this.$http('/msbd/getQuestionjobtypeById/'+id).then(res=>{
-					if(res.data.code==200){
-						this.questionjobtype=res.data.content
-						this.itemId=res.data.content.id
+		methods: {
+			getQuestionjobtypeById: function(id) {
+				this.$http('/msbd/getQuestionjobtypeById/' + id).then(res => {
+					if (res.data.code == 200) {
+						this.questionjobtype = res.data.content
+						this.itemId = res.data.content.id
 						this.$log(res)
-					}else{
+					} else {
 						this.$errMsg('试题所属职位数据查询失败')
 					}
-				}).catch(err=>{
+				}).catch(err => {
 					this.$log(err)
 					this.$errMsg('试题所属职位数据查询失败')
 				})
 			},
-			saveQuestionjobtype:function(){
-            this.$validator.validate().then(valid => {
+			saveQuestionjobtype: function() {
+				this.$validator.validate().then(valid => {
 					if (!valid) {
 						// do stuff if not valid.
 						this.$warnMsg('表单参数不正确')
 						return
 					} else {
-				var that = this
-				// delete some date field //Todo need  fix
-				this.$http.put('/msbd/updateQuestionjobtype',that.questionjobtype).then(res=>{
-					if(res.data.code==200){
-						this.questionjobtype=res.data.content
-						this.$infoMsg('保存成功')
-						this.$log(res)
-					}else{
-						this.$errMsg('试题所属职位数据修改失败')
+						var that = this
+						// delete some date field //Todo need  fix
+						this.$http.put('/msbd/updateQuestionjobtype', that.questionjobtype).then(res => {
+							if (res.data.code == 200) {
+								this.questionjobtype = res.data.content
+								this.$infoMsg('保存成功')
+								this.$log(res)
+							} else {
+								this.$errMsg('试题所属职位数据修改失败')
+							}
+							this.getQuestionjobtypeById(this.itemId)
+						}).catch(err => {
+							this.$log(err)
+							this.$errMsg('试题所属职位数据修改失败')
+							this.getQuestionjobtypeById(this.itemId)
+						})
 					}
-					this.getQuestionjobtypeById(this.itemId)
-				}).catch(err=>{
-					this.$log(err)
-					this.$errMsg('试题所属职位数据修改失败')
-					this.getQuestionjobtypeById(this.itemId)
 				})
-                }
-                }
-                )
 			},
-			toQuestionjobtypeList:function(){
+			toQuestionjobtypeList: function() {
 				this.$router.push('/questionjobtype')
 			}
 		},
-		mounted:function(){
+		mounted: function() {
 			var id = this.$route.query.id
 			this.getQuestionjobtypeById(id)
 		}

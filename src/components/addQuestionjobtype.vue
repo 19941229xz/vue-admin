@@ -10,15 +10,25 @@
 							</div>
 						</div>
 						<div class="row tm-edit-product-row">
-							<div class="col-xl-6 col-lg-6 col-md-12">
+							<div class="col-xl-12 col-lg-12 col-md-12">
 								<!-- <form action="" class="tm-edit-product-form"> -->
-								
-								                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="questionJobTypeName">问题所属职位名称</label>
-                                        <input id="questionJobTypeName" type="text" v-validate="'required'" name="问题所属职位名称" v-model="questionjobtype.questionJobTypeName" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('问题所属职位名称') }}</span>
-                                    </div>
-                                                                    								<!-- <div class="form-group mb-3">
+								<div v-show="$superAdminMode" class="form-group mb-3">
+									<label for="isChecked">审核状态</label>
+									<!-- <input id="isChecked" type="text" v-validate="'required'" name="审核状态" v-model="questionjobtype.isChecked"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('审核状态') }}</span> -->
+									<select class="custom-select" v-model="questionjobtype.isChecked">
+										<option value="1">未审核</option>
+										<option value="2">已审核</option>
+									</select>
+								</div>
+								<div class="form-group mb-3">
+									<label for="questionJobTypeName">问题所属职位名称</label>
+									<input id="questionJobTypeName" type="text" v-validate="'required'" name="问题所属职位名称" v-model="questionjobtype.questionJobTypeName"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('问题所属职位名称') }}</span>
+								</div>
+								<!-- <div class="form-group mb-3">
 										<label for="description">Description</label>
 										<textarea class="form-control validate" rows="3" required></textarea>
 									</div>
@@ -45,7 +55,7 @@
 									</div> -->
 
 							</div>
-							<div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
+							<!-- <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
 								<div class="tm-product-img-dummy mx-auto">
 									<i class="fas fa-cloud-upload-alt tm-upload-icon" onclick="document.getElementById('fileInput').click();"></i>
 								</div>
@@ -53,7 +63,7 @@
 									<input id="fileInput" type="file" style="display:none;" />
 									<input type="button" class="btn btn-primary btn-block mx-auto" value="UPLOAD PRODUCT IMAGE" onclick="document.getElementById('fileInput').click();" />
 								</div>
-							</div>
+							</div> -->
 							<div class="col-12">
 								<button @click="addQuestionjobtype" class="btn btn-primary btn-block text-uppercase">确认添加</button>
 							</div>
@@ -74,10 +84,20 @@
 		data() {
 			return {
 				questionjobtype: {
-					
-                                        id:'',
-                                        questionJobTypeName:'',
-                    				}
+					id: '',
+					questionJobTypeName: '',
+					isChecked:''
+				},
+				searchData: {
+					"model": {
+
+					},
+					"orderParams": [
+
+					],
+					"pageNum": 1,
+					"pageSize": 1000
+				}
 			}
 		},
 		methods: {
@@ -89,19 +109,32 @@
 						return
 					} else {
 						var that = this
-						// delete some date field
-						this.$http.post('/msbd/addQuestionjobtype', that.questionjobtype).then(res => {
-							if (res.data.code == 200) {
-								this.$log(res)
-								this.$infoMsg('添加成功')
-								this.$router.push('/questionjobtype')
+						that.searchData.model.questionJobTypeName = that.questionjobtype.questionJobTypeName
+						this.$http.post('/msbd/getAllQuestionjobtype', that.searchData).then(res => {
+							if (res.data.code == 200 && res.data.content.list.length == 0) {
+								// delete some date field
+								this.$http.post('/msbd/addQuestionjobtype', that.questionjobtype).then(res => {
+									if (res.data.code == 200) {
+										this.$log(res)
+										this.$infoMsg('添加成功')
+										this.$router.push('/questionjobtype')
+									} else {
+										this.$errMsg('添加失败')
+									}
+								}).catch(err => {
+									this.$log(err)
+									this.$errMsg('添加失败')
+								})
+								this.$log(res.data)
 							} else {
-								this.$errMsg('添加失败')
+								this.$warnMsg('名称已经被占用')
 							}
 						}).catch(err => {
-							this.$log(err)
-							this.$errMsg('添加失败')
+							this.$warnMsg('名称已经被占用')
+							console.log(err)
 						})
+
+
 					}
 				});
 			}

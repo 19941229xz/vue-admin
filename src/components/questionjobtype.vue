@@ -1,9 +1,9 @@
 <template>
 	<div class="hello">
 		<div class="container mt-5">
-        	<div class="row tm-content-row">
+			<div class="row tm-content-row">
 				<div class="col-sm-12">
-					<input class="superSearch inp"  type="text" v-model="superSearchKeyWord" placeholder="高级检索..." />
+					<input class="superSearch inp" type="text" v-model="superSearchKeyWord" placeholder="高级检索..." />
 				</div>
 			</div>
 			<div class="row tm-content-row">
@@ -14,28 +14,33 @@
 								<thead>
 									<tr>
 										<th scope="col">&nbsp;</th>
-										
-										
-                                                                                    <th scope="col">主键 </th>     
-                                                                                     <th scope="col">问题所属职位名称 </th>     
-                                         										<th scope="col">&nbsp;</th>
+
+
+										<th scope="col">主键 </th>
+										<th scope="col">问题所属职位名称 </th>
+										<th scope="col">审核状态 1未审核2已审核 </th>
+										<th scope="col">&nbsp;</th>
 									</tr>
 								</thead>
-                                <tbody>
+								<tbody>
 									<tr v-for="item in questionjobtypeList">
-										<th scope="row"><input type="checkbox" v-model="checkedItem" :value="item.id" /></th>
+										<th v-show="$superAdminMode" scope="row"><input type="checkbox" v-model="checkedItem" :value="item.id" /></th>
+										<th v-show="!$superAdminMode" scope="row">&nbsp;</th>
+
+
+										<td @click="editItem(item)">{{item.id}}</td>
+
+										<td @click="editItem(item)">{{item.questionJobTypeName}}</td>
 										
-										                                            
-                                            <td @click="editItem(item)">{{item.id}}</td>
-                                                                                     
-                                            <td @click="editItem(item)">{{item.questionJobTypeName}}</td>
-                                                                                 
-                                        
-										<td>
+										<td @click="editItem(item)">{{item.isChecked}}</td>
+
+
+										<td v-show="$superAdminMode">
 											<a @click="deleteItem(item)" class="tm-product-delete-link">
 												<i class="far fa-trash-alt tm-product-delete-icon"></i>
 											</a>
 										</td>
+										<td v-show="!$superAdminMode" scope="row">&nbsp;</td>
 									</tr>
 
 								</tbody>
@@ -43,11 +48,11 @@
 
 						</div>
 						<!-- table container -->
-						
+
 						<button @click="addQuestionjobtype" class="btn btn-primary btn-block text-uppercase">
 							添加数据
 						</button>
-						<button @click="batchDelete" class="btn btn-primary btn-block text-uppercase">
+						<button v-show="$superAdminMode" @click="batchDelete" class="btn btn-primary btn-block text-uppercase">
 							批量删除
 						</button>
 					</div>
@@ -56,7 +61,7 @@
 			</div>
 		</div>
 	</div>
-</template>	
+</template>
 
 
 <script>
@@ -79,11 +84,11 @@
 				},
 				isLastPage: false,
 				scrollTop: 1,
-                superSearchKeyWord:''
-                
+				superSearchKeyWord: ''
+
 			}
 		},
-        methods: {
+		methods: {
 			refreshItemList: function() {
 				this.searchData.pageNum = 1
 				this.isLastPage = false
@@ -95,25 +100,25 @@
 				if (this.isLastPage) {
 					return
 				}
-                this.$http.post('/msbd/getAllQuestionjobtype', that.searchData).then(res =>{
-                                    if (res.data.code == 200) {
-                                        if (!res.data.content.isLastPage) {
-                                            this.questionjobtypeList = this.questionjobtypeList.concat(res.data.content.list)
-                                        } else {
-                                            this.$infoMsg('没有更多数据')
-                                            this.isLastPage = true
-                                        }
-                                        this.$log(this.questionjobtypeList)
-                                    } else {
-                                        this.$errMsg('试题所属职位数据加载失败')
-                                    }
-                                }).catch(err => {
-                                    this.$errMsg('试题所属职位数据加载失败')
-                                    console.log(err)
-                                })
-				
+				this.$http.post('/msbd/getAllQuestionjobtype', that.searchData).then(res => {
+					if (res.data.code == 200) {
+						if (!res.data.content.isLastPage) {
+							this.questionjobtypeList = this.questionjobtypeList.concat(res.data.content.list)
+						} else {
+							this.$infoMsg('没有更多数据')
+							this.isLastPage = true
+						}
+						this.$log(this.questionjobtypeList)
+					} else {
+						this.$errMsg('试题所属职位数据加载失败')
+					}
+				}).catch(err => {
+					this.$errMsg('试题所属职位数据加载失败')
+					console.log(err)
+				})
+
 			},
-            getQuestionjobtypeList: function() {
+			getQuestionjobtypeList: function() {
 				var that = this
 				this.$http.post('/msbd/getAllQuestionjobtype', that.searchData).then(res => {
 					if (res.data.code == 200) {
@@ -151,7 +156,13 @@
 
 				// this.getMoreQuestionjobtypeList()
 			},
-            editItem: function(item) {
+			editItem: function(item) {
+				//非管理员无权编辑
+				if(!this.$superAdminMode){
+					this.$warnMsg('非管理员无权编辑职位')
+					return
+				}
+				
 				this.$log(item.id)
 				this.$router.push({
 					path: '/editQuestionjobtype',
@@ -186,7 +197,7 @@
 					console.log(err)
 				})
 			},
-            batchDelete: function() {
+			batchDelete: function() {
 				if (this.checkedItem.length == 0) {
 					this.$log(this.checkedItem)
 					this.$warnMsg('未选择要删除得数据')
@@ -224,8 +235,8 @@
 					this.refreshItemList()
 				}
 			},
-            superSearchKeyWord:function(){
-				this.searchData.superSearchKeyWord=this.superSearchKeyWord
+			superSearchKeyWord: function() {
+				this.searchData.superSearchKeyWord = this.superSearchKeyWord
 				this.getQuestionjobtypeList()
 			}
 		},
