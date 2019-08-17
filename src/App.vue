@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<nav v-show="$route.name.indexOf('ogin')<=-1" class="navbar navbar-expand-xl">
+		<nav v-show="$route.name.indexOf('ogin')<=-1&&$route.name.indexOf('reg')<=-1" class="navbar navbar-expand-xl">
 			<div class="container h-100">
 				<a class="navbar-brand" href="index.html">
 					<h1 class="tm-site-title mb-0">面试宝典后台</h1>
@@ -19,7 +19,7 @@
 								<span class="sr-only">(current)</span>
 							</a>
 						</li>
-						<li v-for="item in menuList" class="nav-item dropdown" style="color: white;">
+						<li v-if="userInfo.status==1" v-for="item in menuList" class="nav-item dropdown" style="color: white;">
 
 							<a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown"
 							 aria-haspopup="true" aria-expanded="false">
@@ -65,7 +65,7 @@
 					<ul class="navbar-nav">
 						<li class="nav-item">
 							<a @click="logout" class="nav-link d-block" href="javascript:void(0);">
-								{{realName}}, <b>Logout</b>
+								{{userInfo.realName}}, <b>Logout</b>
 							</a>
 						</li>
 					</ul>
@@ -91,7 +91,8 @@
 		data() {
 			return {
 				menuList: [],
-				realName:''
+				realName:'',
+				userInfo:{}
 			}
 		},
 		methods:{
@@ -99,10 +100,25 @@
 				this.$clearAllCookie()
 				localStorage.clear()
 				sessionStorage.clear()
-				this.$setCookie('lastHref',window.location.href,30*60)
+				// this.$setCookie('lastHref',window.location.href,30*60)
 				this.$router.push('/login')
 			},
 			changeMode:function(){
+				
+			},
+			getUserInfo: async function(){
+				var that =  this
+				if(that.$getCookie('userId')==null||that.$getCookie('userId')==''){
+					
+				}else{
+					var res = await this.$http('/user-server/getUserById/'+that.$getCookie('userId'))
+					this.userInfo = res.data.content
+					//非管理员模式 修改完信息以后如果是  未激活状态 跳转到登录页
+					if(this.userInfo.status==2&&!this.$superAdminMode){
+						this.$warnMsg('账号审核中暂不可使用')
+						this.$router.push('/userCenter')
+					}
+				}
 				
 			}
 		},
@@ -116,6 +132,7 @@
 			this.realName=this.$getCookie('realName')
 			// console.log(this.$getCookie('realName'))
 			this.$log(this.menuList.length)
+			this.getUserInfo()
 		}
 	}
 </script>

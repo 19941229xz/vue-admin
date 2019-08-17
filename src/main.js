@@ -64,7 +64,7 @@ function setCookie(name, value, time) {
 }
 
 // 超级管理员模式
-Vue.prototype.$superAdminMode = getCookie('roleId') == 1 ? true : false
+Vue.prototype.$superAdminMode = getCookie('roleId') == 2 ? true : false
 
 
 
@@ -84,7 +84,7 @@ Vue.config.productionTip = false
 // 	content: '加载中'
 // });
 // layer.close(loadTip)
-var loadTip;
+var loadTip = null;
 var tipCount = 0
 // 配置axios相关属性
 axios.interceptors.request.use(config => {
@@ -95,16 +95,20 @@ axios.interceptors.request.use(config => {
 	Vue.prototype.$log(routeName)
 
 	if (userId == null || userId == '') {
-		if (routeName.indexOf('ogin') <= -1) {
+		if (routeName.indexOf('ogin') <= -1 && routeName.indexOf('reg') <= -1) {
 			setCookie('lastHref', window.location.href, 30 * 60)
 			router.push('/login')
 		}
 	}
 
-	loadTip = layer.open({
-		type: 2,
-		content: '加载中'
-	});
+	console.log(loadTip)
+	if (loadTip == null) {
+		loadTip = layer.open({
+			type: 2,
+			content: '加载中'
+		});
+	}
+
 
 
 	// config.method === 'post' ?
@@ -116,6 +120,7 @@ axios.interceptors.request.use(config => {
 	return config;
 }, error => { //请求错误处理
 	layer.close(loadTip)
+	loadTip = null
 	Promise.reject(error)
 });
 
@@ -123,6 +128,7 @@ axios.interceptors.response.use(
 	response => { //成功请求到数据
 		// layer.closeAll()
 		layer.close(loadTip)
+		loadTip == null
 		// //这里根据后端提供的数据进行对应的处理
 		// if (response.data.result === 'TRUE') {
 		//     return response.data;
@@ -138,10 +144,11 @@ axios.interceptors.response.use(
 	},
 	error => { //响应错误处理
 		layer.close(loadTip)
-
+		loadTip == null
 		console.log('error 正式环境需要跳转到登录页');
 		console.log(error);
 		console.log(JSON.stringify(error));
+		// debugger
 		//如果是在登录页出错不做跳转
 		if (router.currentRoute.name.indexOf('ogin') <= -1) {
 			router.push('/login')
@@ -225,7 +232,7 @@ Vue.prototype.$warnMsg = function(msg) {
 	})
 }
 
-var isDev = true
+var isDev = false
 Vue.prototype.$log = function(log) {
 	if (isDev) {
 		console.log(log)

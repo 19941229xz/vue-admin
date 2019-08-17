@@ -56,6 +56,14 @@
 								<span class="validateErrorSpan">{{ errors.first('头像') }}</span>
 							</div> -->
 							<div class="form-group col-lg-6">
+								<label for="companyId">公司id</label>
+								<!-- <input id="companyId" v-validate="''" name="公司id" v-model="userInfo.companyId" type="text" class="form-control validate" />
+								<span class="validateErrorSpan">{{ errors.first('公司id') }}</span> -->
+								<select v-validate="'required'" v-model="userInfo.companyId" class="custom-select tm-select-accounts" id="companyId">
+									<option v-for="item in companyList" :value="item.id">{{item.name}}</option>
+								</select>
+							</div>
+							<div class="form-group col-lg-6">
 								<label for="userName">账号</label>
 								<input id="userName" v-validate="'required'" name="账号" v-model="userInfo.userName" type="text" class="form-control validate" />
 								<span class="validateErrorSpan">{{ errors.first('账号') }}</span>
@@ -76,7 +84,7 @@
 								<span class="validateErrorSpan">{{ errors.first('真实姓名') }}</span>
 							</div>
 							<div class="form-group col-lg-6">
-								<label for="gender">性别 1男 2女</label>
+								<label for="gender">性别</label>
 								<!-- <input id="gender" v-validate="'required'" name="性别 1男  2女" v-model="userInfo.gender" type="text" class="form-control validate" />
 								<span class="validateErrorSpan">{{ errors.first('性别 1男  2女') }}</span> -->
 								<select v-validate="'required'" v-model="userInfo.gender" class="custom-select tm-select-accounts" id="gender">
@@ -203,11 +211,6 @@
 								<span class="validateErrorSpan">{{ errors.first('学生id') }}</span>
 							</div>
 							<div v-show="$superAdminMode" class="form-group col-lg-6">
-								<label for="companyId">公司id</label>
-								<input id="companyId" v-validate="''" name="公司id" v-model="userInfo.companyId" type="text" class="form-control validate" />
-								<span class="validateErrorSpan">{{ errors.first('公司id') }}</span>
-							</div>
-							<div v-show="$superAdminMode" class="form-group col-lg-6">
 								<label for="schoolId">学校id</label>
 								<input id="schoolId" v-validate="''" name="学校id" v-model="userInfo.schoolId" type="text" class="form-control validate" />
 								<span class="validateErrorSpan">{{ errors.first('学校id') }}</span>
@@ -298,16 +301,37 @@
 			return {
 				userInfo: {
 
+				},
+				companyList: [],
+				searchData: {
+					"model": {
+
+					},
+					"orderParams": [
+
+					],
+					"pageNum": 1,
+					"pageSize": 10
 				}
 			}
 		},
 		methods: {
-			getUserInfoByUserId: function() {
+			getUserInfoByUserId: function(itemId) {
 				var that = this
-				this.$http('/user-server/getUserById/' + that.$getCookie('userId')).then(res => {
+				console.log(itemId)
+				var itemId = itemId == undefined ? that.$getCookie('userId') : itemId
+				// if(itemId==undefined){
+				// 	console.log('undei')
+				// }
+				this.$http('/user-server/getUserById/' + itemId).then(res => {
 					this.$log(res)
 					if (res.data.code == 200) {
 						this.userInfo = res.data.content
+						if (this.userInfo.realName == '' || this.userInfo.nickName == '' || this.userInfo.headImg == '' || this.userInfo
+							.email == '' ||
+							this.userInfo.realName == null || this.userInfo.nickName == null || this.userInfo.headImg == null) {
+							this.$warnMsg('请尽快完善个人信息以免耽误账号审核进度')
+						}
 					} else {
 						this.$warnMsg('用户信息获取失败')
 					}
@@ -361,20 +385,98 @@
 							this.$log(res.data)
 							if (res.data.code == 200) {
 								this.$infoMsg('保存成功')
-								
-							}else{
+								// 判断当前用户是否是管理员 如果是管理员就通知用户  不是管理员就通知管理员去审核
+								if (this.$superAdminMode) { //  管理员
+									this.notifyUser()
+								} else {
+									this.notifyAdmin()
+								}
+							} else {
 								this.$warnMsg('保存失败')
 							}
-						}).catch(err=>{
+						}).catch(err => {
 							this.$warnMsg('保存失败')
 						})
+						// 非管理员模式 修改完信息以后如果是  未激活状态 跳转到登录页
+						// if(that.userInfo.status!=2&&!that.$superAdminMode){
+						// 	this.$warnMsg('账号审核中暂不可使用')
+						// }
 					}
 				})
+			},
+			getCompanyList: function() {
+				var that = this
+				this.$http.post('/user-server/getAllCompany', that.searchData).then(res => {
+					if (res.data.code == 200) {
+						this.companyList = res.data.content.list
+						// this.userInfo.companyId = res.data.content.list[0].id
+					} else {
+
+					}
+				}).catch(err => {
+					this.$log('err')
+				})
+			},
+			notifyAdmin: async function() { // 通知管理员  查询所有管理员  群发通知
+				var searchData = {
+					"model": {
+						roleId: 2
+					},
+					"orderParams": [
+						'regTime asc' //  先通知资历老的管理员
+					],
+					"pageNum": 1,
+					"pageSize": 1000
+				}
+				var res = await this.$http.post('/user-server/getAllUser', searchData)
+				var adminList = res.data.content.list
+				for (var i = 0; i < adminList.length; i++) {
+					var adminEmail = adminList[i].email
+					// 执行发邮件操作
+					var data = {
+						"emailAdress": adminEmail,
+						"text": "手机号："+this.userInfo.phoneNum+" 昵称："+this.userInfo.nickName+" 头像："+this.userInfo.headImg+" 邮箱:"+this.userInfo.email,
+						"title": this.userInfo.realName+"用户信息待审核"
+					}
+					var res = await this.$http.post('/message-server/emailSender/getEmailToken',data)
+					
+					var token = res.data.content
+					var res2 = await this.$http('/message-server/emailSender/sendNormalEmail/'+token)
+					if(res2.data.code==200){
+						// this.$infoMsg('已邮件通知了管理员 请耐心等候审核')
+					}else{ 
+						
+					}
+				}
+			},
+			notifyUser: async function() { // 通知用户审核的结果
+				if(this.userInfo.email!=''&&this.userInfo.email!=null){ // 如果邮箱不为空  才能通知用户
+					var data = {
+						"emailAdress": this.userInfo.email,
+						"text": this.userInfo.status==1?"审核已经通过 重新登录并刷新网页就可以自由的创建试题和试卷了":"请完善个人中心的所有信息 并确保信息的有效 点击保存会重新进入审核流程",
+						"title": "审核"+(this.userInfo.status==1?'已通过':'未通过')
+					}
+					var res = await this.$http.post('/message-server/emailSender/getEmailToken',data)
+					var token = res.data.content
+					var res2 = await this.$http('/message-server/emailSender/sendNormalEmail/'+token)
+					if(res2.data.code==200){
+						// this.$infoMsg('已邮件通知了管理员 请耐心等候审核')
+					}else{ 
+						
+					}
+				}
+			}
+		},
+		filters: {
+			dateformat: function(val) {
+				var dateee = new Date(val).toJSON();
+				var date = new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
+				return date
 			}
 		},
 		mounted: function() {
-			this.getUserInfoByUserId()
-
+			this.getUserInfoByUserId(this.$route.query.id)
+			this.getCompanyList()
 			// 加载日历插件
 
 

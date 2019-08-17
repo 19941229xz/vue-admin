@@ -65,10 +65,10 @@
 						</div>
 						<!-- table container -->
 						
-						<button @click="addQuestioncomment" class="btn btn-primary btn-block text-uppercase">
+						<button v-show="$superAdminMode" @click="addQuestioncomment" class="btn btn-primary btn-block text-uppercase">
 							添加数据
 						</button>
-						<button @click="batchDelete" class="btn btn-primary btn-block text-uppercase">
+						<button v-show="$superAdminMode" @click="batchDelete" class="btn btn-primary btn-block text-uppercase">
 							批量删除
 						</button>
 					</div>
@@ -136,6 +136,11 @@
 			},
             getQuestioncommentList: function() {
 				var that = this
+				// if(this.$superAdminMode==false){ // 如果不是超级管理员模式  那么用户只能看见自己所属公司创建的数据  但是只能修改自己创建的
+				// 	that.searchData.model.companyId=that.$getCookie('companyId')
+				// }else{
+				// 	delete that.searchData.model.companyId
+				// }
 				this.$http.post('/msbd/getAllQuestioncomment', that.searchData).then(res => {
 					if (res.data.code == 200) {
 						this.questioncommentList = res.data.content.list
@@ -173,6 +178,10 @@
 				// this.getMoreQuestioncommentList()
 			},
             editItem: function(item) {
+				if(!this.$superAdminMode){
+					this.$warnMsg('你无权编辑评论')
+					return
+				}
 				this.$log(item.id)
 				this.$router.push({
 					path: '/editQuestioncomment',

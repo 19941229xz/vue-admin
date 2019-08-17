@@ -170,9 +170,9 @@
 			getExampaperList: function() {
 				var that = this
 				if(this.$superAdminMode==false){ // 如果不是超级管理员模式  那么用户只能看见自己所属公司创建的数据  但是只能修改自己创建的
-					that.searchData.model.companyId=that.$getCookie('companyId')
+					that.searchData.model.createUserId=that.$getCookie('userId')
 				}else{
-					delete that.searchData.model.companyId
+					delete that.searchData.model.createUserId
 				}
 				this.$http.post('/msbd/getAllExampaper', that.searchData).then(res => {
 					if (res.data.code == 200) {

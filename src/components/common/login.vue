@@ -56,12 +56,12 @@
 										<button @click="toPhoneLogin" class="btn btn-primary btn-block text-uppercase">
 											短信快捷登录
 										</button><br />
-										<button @click="toEmailLogin()" class="btn btn-primary btn-block text-uppercase">
+										<!-- <button @click="toEmailLogin()" class="btn btn-primary btn-block text-uppercase">
 											邮箱登录
-										</button>
+										</button> -->
 									</div>
-									<a style="color: white;float: right;" class="mt-5  text-uppercase">
-										忘记密码?
+									<a style="color: white;float: right;" class="mt-5  text-uppercase" href="#/reg">
+										去注册
 									</a>
 								</div>
 							</div>
@@ -80,7 +80,7 @@
 		data() {
 			return {
 				userName: '',
-				password: '123',
+				password: '',
 				// phoneNum:'',  // 手机号
 				// textCode:'',  // 短信验证码
 				searchData: {
@@ -114,7 +114,7 @@
 							if (res.data.code == 200) {
 								if (res.data.content.list.length == 1) {
 									// 判断账号是否被激活
-									if (res.data.content.list[0].status != 1) {
+									if (res.data.content.list[0].status >2) {
 										switch (res.data.content.list[0].status) {
 											case 2:
 												that.$warnMsg('账号未激活')
@@ -137,15 +137,21 @@
 										that.$setCookie('headImg', res.data.content.list[0].headImg, 30 * 60)
 										that.$setCookie('nickName', res.data.content.list[0].nickName, 30 * 60)
 										
-										console.log(that.$getCookie('lastHref'))
+										// console.log(that.$getCookie('lastHref'))
 										// debugger
-										if(that.$getCookie('lastHref')!=null&&that.$getCookie('lastHref')!=''){
-											var arr = that.$getCookie('lastHref').split('#')
-											var href = arr[1]
-											that.$router.push(href)
-										}else{
-											that.$router.push('/')
-										}
+										// if(that.$getCookie('lastHref')!=null&&that.$getCookie('lastHref')!=''){
+										// 	var arr = that.$getCookie('lastHref').split('#')
+										// 	var href = arr[1]
+										// 	that.$router.push(href)
+										// }else{
+											if(res.data.content.list[0].status==2){
+												that.$router.push('/userCenter')
+												that.$warnMsg('请尽快完善信息等待审核')
+											}else{
+												that.$router.push('/')
+											}
+											
+										// }
 									}
 
 								} else {

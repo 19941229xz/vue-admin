@@ -59,12 +59,12 @@
 										<button @click="toLogin" class="btn btn-primary btn-block text-uppercase">
 											账号密码登录
 										</button><br />
-										<button @click="toEmailLogin()" class="btn btn-primary btn-block text-uppercase">
+										<!-- <button @click="toEmailLogin()" class="btn btn-primary btn-block text-uppercase">
 											邮箱登录
-										</button>
+										</button> -->
 									</div>
-									<a style="color: white;float: right;" class="mt-5  text-uppercase">
-										忘记密码?
+									<a style="color: white;float: right;" class="mt-5  text-uppercase" href="#/reg">
+										去注册
 									</a>
 								</div>
 							</div>
@@ -159,7 +159,39 @@
 							if (res.data.code == 200) {
 								//登录成功 将用户id保存到cookie中  时间半小时 30*60
 								that.$setCookie('userId',that.userInfo.id,30*60)
-								that.$router.push('/')
+								// 判断账号是否被激活
+								if (that.userInfo.status >2) {
+									switch (that.userInfo.status) {
+										case 2:
+											that.$warnMsg('账号未激活')
+											break;
+										case 3:
+											that.$warnMsg('账号被冻结,请及时联系客服解冻')
+											break;
+										case 4:
+											that.$errorMsg('账号被删除,请及时联系客服恢复')
+											break;
+										default:
+											break;
+									}
+								} else {
+									that.$setCookie('userId', that.userInfo.id, 30 * 60)
+									that.$setCookie('companyId', that.userInfo.companyId, 30 * 60)
+									that.$setCookie('schoolId', that.userInfo.schoolId, 30 * 60)
+									that.$setCookie('realName', that.userInfo.realName, 30 * 60)
+									that.$setCookie('roleId', that.userInfo.roleId, 30 * 60)
+									that.$setCookie('headImg', that.userInfo.headImg, 30 * 60)
+									that.$setCookie('nickName', that.userInfo.nickName, 30 * 60)
+									
+										if(that.userInfo.status==2){
+											that.$router.push('/userCenter')
+											that.$warnMsg('请尽快完善信息等待审核')
+										}else{
+											that.$router.push('/')
+										}
+										
+								}
+								// that.$router.push('/')
 							} else {
 								that.$warnMsg('验证码错误')
 							}
@@ -214,7 +246,7 @@
 											that.$infoMsg('验证码已发送至您的手机')
 											that.sendTextCodeBtnIsDisabled = true
 											var _that = that
-											var num = 10
+											var num = 60
 											_that.sendTextCodeTip = '已发送(' + num + ')'
 											var interval = setInterval(function() {
 												num--

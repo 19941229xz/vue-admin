@@ -60,8 +60,8 @@
 											短信快捷登录
 										</button>
 									</div>
-									<a style="color: white;float: right;" class="mt-5  text-uppercase">
-										忘记密码?
+									<a style="color: white;float: right;" class="mt-5  text-uppercase" href="#/reg">
+										去注册
 									</a>
 								</div>
 							</div>

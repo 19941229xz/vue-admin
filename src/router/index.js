@@ -5,6 +5,7 @@ import login from '@/components/common/login'
 import phoneLogin from '@/components/common/phoneLogin'
 import emailLogin from '@/components/common/emailLogin'
 import userCenter from '@/components/common/userCenter'
+import reg from '@/components/common/reg'
 
 import exampaper from '@/components/exampaper'
 import addExampaper from '@/components/addExampaper'
@@ -58,7 +59,15 @@ export default new Router({
 			path: '/userCenter',
 			name: 'userCenter',
 			component: userCenter
-		}, {
+		},
+		{
+			path: '/reg',
+			name: 'reg',
+			component: reg
+		}
+		
+		
+		, {
 			path: '/exampaper',
 			name: 'exampaper',
 			component: exampaper

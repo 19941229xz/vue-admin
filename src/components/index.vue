@@ -14,9 +14,11 @@
 						<div class="tm-notification-items">
 							<!--  -->
 							<div @click="editQuestion(item)" v-for="item in questionList" class="media tm-notification-item">
-								<div class="tm-gray-circle"><img :src="item.createUserHeadPic" alt="Avatar Image" style="width: 100%;height: 100%;" class="rounded-circle"></div>
+								<div class="tm-gray-circle"><img :src="item.createUserHeadPic" alt="Avatar Image" style="width: 100%;height: 100%;"
+									 class="rounded-circle"></div>
 								<div class="media-body">
-									<p class="mb-2"><b>{{item.createUserRealName}}</b> 创建了 <b>一份</b> {{item.questionJobTypeName}}岗位的试题  "{{item.question}}". 请尽快审核.</p>
+									<p class="mb-2"><b>{{item.createUserRealName}}</b> 创建了 <b>一份</b> {{item.questionJobTypeName}}岗位的试题 "{{item.question}}".
+										请尽快审核.</p>
 									<span class="tm-small tm-text-color-secondary">{{item.createDate | dateformat}}.</span>
 								</div>
 							</div>
@@ -30,9 +32,11 @@
 						<div class="tm-notification-items">
 							<!--  -->
 							<div @click="editExampaper(item)" v-for="item in exampaperList" class="media tm-notification-item">
-								<div class="tm-gray-circle"><img :src="item.userHeadPic" alt="Avatar Image" style="width: 100%;height: 100%;" class="rounded-circle"></div>
+								<div class="tm-gray-circle"><img :src="item.userHeadPic" alt="Avatar Image" style="width: 100%;height: 100%;"
+									 class="rounded-circle"></div>
 								<div class="media-body">
-									<p class="mb-2"><b>{{item.userRealName}}</b> 创建了 <b>一份</b> {{item.questionJobTypeName}} 试卷《{{item.examPaperName}}》. 请尽快审核.</p>
+									<p class="mb-2"><b>{{item.userRealName}}</b> 创建了 <b>一份</b> {{item.questionJobTypeName}} 试卷《{{item.examPaperName}}》.
+										请尽快审核.</p>
 									<span class="tm-small tm-text-color-secondary">{{item.createDate | dateformat}}.</span>
 								</div>
 							</div>
@@ -49,6 +53,24 @@
 								<div class="tm-gray-circle"></div>
 								<div class="media-body">
 									{{item.questionJobTypeName}}
+									<!-- <p class="mb-2"><b>{{item.userRealName}}</b> 创建了 <b>一份</b> {{item.questionJobTypeName}} 试卷《{{item.examPaperName}}》. 请尽快审核.</p>
+									<span class="tm-small tm-text-color-secondary">{{item.createDate | dateformat}}.</span> -->
+								</div>
+							</div>
+							<!--  -->
+						</div>
+					</div>
+				</div>
+				<div v-show="userList.length!=0" class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+					<div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-overflow">
+						<h2 class="tm-block-title">待审核账号({{userList.length}})</h2>
+						<div class="tm-notification-items">
+							<!--  -->
+							<div @click="editUser(item)" v-for="item in userList" class="media tm-notification-item">
+								<div class="tm-gray-circle"><img v-show="item.headImg!=''&&item.headImg!=null" :src="item.headImg" alt="Avatar Image" style="width: 100%;height: 100%;"
+									 class="rounded-circle"></div>
+								<div class="media-body">
+									<b>{{item.realName}}</b>有一个新账号{{item.phoneNum}}注册了，请尽快审核！
 									<!-- <p class="mb-2"><b>{{item.userRealName}}</b> 创建了 <b>一份</b> {{item.questionJobTypeName}} 试卷《{{item.examPaperName}}》. 请尽快审核.</p>
 									<span class="tm-small tm-text-color-secondary">{{item.createDate | dateformat}}.</span> -->
 								</div>
@@ -235,12 +257,13 @@
 				userInfo: {
 
 				},
-				exampaperList: [],
+				exampaperList: [], // 待审核数据
 				questionList: [],
 				questionjobtypeList: [],
+				userList: [], // 
 				searchData: {
 					"model": {
-				
+
 					},
 					"orderParams": [
 						'createDate asc'
@@ -250,7 +273,7 @@
 				}
 			}
 		},
-		methods:{
+		methods: {
 			getUserInfoByUserId: function() {
 				var that = this
 				this.$http('/user-server/getUserById/' + that.$getCookie('userId')).then(res => {
@@ -303,7 +326,7 @@
 			getQuestionList: function() {
 				var that = this
 				that.searchData.model.isChecked = 1
-				that.searchData.orderParams=[]
+				that.searchData.orderParams = []
 				this.$http.post('/msbd/getAllQuestion', that.searchData).then(res => {
 					if (res.data.code == 200) {
 						this.questionList = res.data.content.list
@@ -312,10 +335,38 @@
 					} else {
 						this.$errMsg('试题数据加载失败')
 					}
-					that.searchData.orderParams=['createDate asc']
+					that.searchData.orderParams = ['createDate asc']
 				}).catch(err => {
 					this.$errMsg('试题数据加载失败')
-					that.searchData.orderParams=['createDate asc']
+					that.searchData.orderParams = ['createDate asc']
+				})
+			},
+			getUserList: function() {
+				var that = this
+				// that.searchData.model.isChecked = 2
+				// that.searchData.orderParams=[]
+				var searchData = {
+					"model": {
+						status:2
+					},
+					"orderParams": [
+						'regTime asc'
+					],
+					"pageNum": 1,
+					"pageSize": 1000
+				}
+				this.$http.post('/user-server/getAllUser', searchData).then(res => {
+					if (res.data.code == 200) {
+						this.userList = res.data.content.list
+						this.$log(this.userList)
+						this.$log(res.data)
+					} else {
+						this.$errMsg('待审核用户加载失败')
+					}
+					that.searchData.orderParams = ['createDate asc']
+				}).catch(err => {
+					this.$errMsg('待审核用户加载失败')
+					that.searchData.orderParams = ['createDate asc']
 				})
 			},
 			editExampaper: function(item) {
@@ -354,28 +405,38 @@
 						id: item.id
 					}
 				})
+			},
+			editUser: function(item) {
+				this.$log(item.id)
+				this.$router.push({
+					path: '/userCenter',
+					query: {
+						id: item.id
+					}
+				})
 			}
 		},
-		filters:{
+		filters: {
 			dateformat: function(val) {
 				var dateee = new Date(val).toJSON();
 				var date = new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
 				return date
 			}
 		},
-		mounted:function(){
+		mounted: function() {
 			// 该页面非超级管理员不能访问
 			if (!this.$superAdminMode) {
 				this.$router.push('/question')
 				return
-			} 
-			
+			}
+
 			this.getUserInfoByUserId()
 			this.getExampaperList()
 			this.getQuestionList()
 			this.getQuestionjobtypeList()
-			
-			
+			this.getUserList()
+
+
 		}
 	}
 </script>

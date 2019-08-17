@@ -43,13 +43,14 @@
 									 class="custom-select tm-select-accounts" id="questionTypeId">
 										<option value="1">选择题</option>
 										<option value="2">判断题</option>
+										<option value="3">多选题</option>
 									</select>
 								</div>
 								<div class="form-group mb-3">
 									<label for="examPaperId">所属试卷id</label>
 									<!-- <input id="examPaperId" type="text" v-validate="'required'" name="所属试卷id" v-model="question.examPaperId" class="form-control validate" />
 									<span class="validateErrorSpan">{{ errors.first('所属试卷id') }}</span> -->
-									<select v-validate="'required'" v-model="question.examPaperId" class="custom-select tm-select-accounts" id="examPaperId">
+									<select v-validate="''" v-model="question.examPaperId" class="custom-select tm-select-accounts" id="examPaperId">
 										<option v-for="(item,index) in exampaperList" :value="item.id">{{item.examPaperName}}</option>
 									</select>
 								</div>
@@ -114,10 +115,34 @@
 									<input id="optionD" type="text" v-validate="''" name="选项D" v-model="question.optionD" class="form-control validate" />
 									<!-- <span class="validateErrorSpan">{{ errors.first('选项D') }}</span> -->
 								</div>
-								<div class="form-group mb-3">
+								<!-- <div class="form-group mb-3">
 									<label for="rightOption">正确选项</label>
 									<input id="rightOption" type="text" v-validate="'required'" name="正确选项" v-model="question.rightOption" class="form-control validate" />
 									<span class="validateErrorSpan">{{ errors.first('正确选项') }}</span>
+								</div> -->
+								<div v-if="question.questionTypeId!=3" class="form-group mb-3">
+									<label for="rightOption">正确选项</label>
+									<!-- <input id="rightOption" type="text" v-validate="'required'" name="正确选项" v-model="question.rightOption" class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('正确选项') }}</span> -->
+									<select v-validate="'required'" v-model="question.rightOption"
+									 class="custom-select tm-select-accounts" id="questionTypeId">
+										<option value="A">A</option>
+										<option value="B">B</option>
+										<option v-if="question.questionTypeId==1" value="C">C</option>
+										<option v-if="question.questionTypeId==1" value="D">D</option>
+									</select>
+								</div>
+								<div v-if="question.questionTypeId==3" class="form-group mb-3">
+									<label for="rightOption">正确选项</label>
+									<input id="rightOption" type="text" v-validate="'required|min:2'" name="正确选项" v-model="question.rightOption" class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('正确选项') }}</span>
+									<!-- <select @change="rightOptionChanged(question.rightOption)" v-validate="'required'" v-model="question.rightOption"
+									 class="custom-select tm-select-accounts" id="questionTypeId">
+										<option value="A">A</option>
+										<option value="B">B</option>
+										<option v-if="question.questionTypeId==1" value="C">C</option>
+										<option v-if="question.questionTypeId==1" value="D">D</option>
+									</select> -->
 								</div>
 								<!-- <div class="form-group mb-3">
 									<label for="questionImg1">问题配图1</label>
