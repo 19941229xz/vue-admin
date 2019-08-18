@@ -428,7 +428,7 @@
 
 								// 邮件通知  如果是普通用户则通知到各个管理员  管理员用户自己添加不需要通知 只需要跳转到审核首页即可
 								if (!this.$superAdminMode) {
-									emailUtil.sendNormalEmailToAllAdmin('新试题待审核', that.question.questionJobTypeName + '岗位新增一题请尽快审核')
+									emailUtil.sendNormalEmailToAllAdmin('新试题待审核', that.question.createUserRealName+':我在'+that.question.questionJobTypeName + '岗位新增一题请尽快审核')
 								} else {
 									this.$router.push('/')
 								}

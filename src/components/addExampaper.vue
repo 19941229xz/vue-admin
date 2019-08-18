@@ -264,7 +264,7 @@
 											this.$infoMsg('添加成功')
 											// 邮件通知  如果是普通用户则通知到各个管理员  管理员用户自己添加不需要通知 只需要跳转到审核首页即可
 											if (!this.$superAdminMode) {
-												emailUtil.sendNormalEmailToAllAdmin('新试卷待审核', that.exampaper.questionJobTypeName + '岗位新增一份试卷请尽快审核')
+												emailUtil.sendNormalEmailToAllAdmin('新试卷待审核', that.exampaper.userRealName+':我在'+that.exampaper.questionJobTypeName + '岗位新增一份试卷请尽快审核')
 											} else {
 												this.$router.push('/')
 											}
