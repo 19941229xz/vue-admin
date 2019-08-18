@@ -166,7 +166,7 @@
 											that.$warnMsg('账号未激活')
 											break;
 										case 3:
-											that.$warnMsg('账号被冻结,请及时联系客服解冻')
+											that.$warnMsg('无后台登录权限')
 											break;
 										case 4:
 											that.$errorMsg('账号被删除,请及时联系客服恢复')
@@ -233,6 +233,8 @@
 						if (res.data.code == 200 && res.data.content.list.length == 1) {
 							//保存用户数据到本地
 							that.userInfo = res.data.content.list[0]
+							// 如果用户状态是3  则改为2
+							// that.changeUserStatusFrom3To2(that.userInfo)
 							//
 							that.$http.post('/message-server/textMessage/getPhoneToken', getPhoneTokenData).then(res => {
 								that.$log(res)
@@ -289,6 +291,15 @@
 
 
 
+			},
+			changeUserStatusFrom3To2: async function(userInfo){
+				// if(userInfo.status==3){
+				// 	userInfo.status=2
+				// 	var res = await this.$http.put('/user-server/updateUser',userInfo)
+				// 	if(res.data.code == 200){
+				// 		this.userInfo.status =2
+				// 	}
+				// }
 			},
 			toLogin: function() {
 				this.$router.push('/login')

@@ -231,7 +231,7 @@
 								</div>
 								<div v-show="$superAdminMode" class="form-group mb-3">
 									<label for="commentNum">试题评论数</label>
-									<input id="commentNum" type="text" v-validate="''" name="试题评论数" v-model="question.commentNum" class="form-control validate" />
+									<input id="commentNum" type="text" name="试题评论数" v-model="question.commentNum" class="form-control validate" />
 									<!-- <span class="validateErrorSpan">{{ errors.first('试题评论数') }}</span> -->
 								</div>
 								
@@ -264,17 +264,17 @@
 								</div>
 								<div v-show="$superAdminMode" class="form-group mb-3">
 									<label for="answeredNum">被回答次数</label>
-									<input id="answeredNum" type="text" v-validate="''" name="被回答次数" v-model="question.answeredNum" class="form-control validate" />
+									<input id="answeredNum" type="text"  name="被回答次数" v-model="question.answeredNum" class="form-control validate" />
 									<!-- <span class="validateErrorSpan">{{ errors.first('被回答次数') }}</span> -->
 								</div>
 								<div v-show="$superAdminMode" class="form-group mb-3">
 									<label for="viewNum">浏览次数</label>
-									<input id="viewNum" type="text" v-validate="''" name="浏览次数" v-model="question.viewNum" class="form-control validate" />
+									<input id="viewNum" type="text"  name="浏览次数" v-model="question.viewNum" class="form-control validate" />
 									<!-- <span class="validateErrorSpan">{{ errors.first('浏览次数') }}</span> -->
 								</div>
 								<div v-show="$superAdminMode" class="form-group mb-3">
 									<label for="answerIsFalseNum">回答错误的次数</label>
-									<input id="answerIsFalseNum" type="text" v-validate="''" name="回答错误的次数" v-model="question.answerIsFalseNum"
+									<input id="answerIsFalseNum" type="text"  name="回答错误的次数" v-model="question.answerIsFalseNum"
 									 class="form-control validate" />
 									<!-- <span class="validateErrorSpan">{{ errors.first('回答错误的次数') }}</span> -->
 								</div>
@@ -353,6 +353,8 @@
 </template>
 
 <script>
+	import emailUtil from '.././util/emailUtil.js'
+	
 	export default {
 		name: 'editQuestion',
 		data() {
@@ -417,8 +419,8 @@
 			}
 		},
 		methods: {
-			getQuestionById: function(id) {
-				this.$http('/msbd/getQuestionById/' + id).then(res => {
+			getQuestionById: async function(id) {
+				await this.$http('/msbd/getQuestionById/' + id).then(res => {
 					if (res.data.code == 200) {
 						this.question = res.data.content
 						this.itemId = res.data.content.id
@@ -473,19 +475,32 @@
 							// return
 						}
 						
+						
 						this.$http.put('/msbd/updateQuestion', that.question).then(res => {
+							
 							if (res.data.code == 200) {
-								this.question = res.data.content
+								// this.question = res.data.content
 								this.$infoMsg('保存成功')
+								// this.getQuestionById(this.itemId)
+								// 如果是普通用户 需要重新审核 那么又要通知到所有管理员  
+								if (!this.$superAdminMode) {
+									emailUtil.sendNormalEmailToAllAdmin('有试题被编辑需重审',that.question.questionJobTypeName+'岗位有题目被编辑请尽快审核')
+								} else{
+									//  如果是管理员  则通知该题创建者  不论是否审核通过
+									// this.$router.push('/')
+									emailUtil.sendEmailByUserId('有试题审核'+(that.question.isChecked==1?'未通过':'通过'),that.question.question+'审核'+(that.question.isChecked==1?'未通过，请检查题目信息':'通过，您的试题已经成功上线，快去看看吧'),that.question.createUserId)
+								}
+								//
+								
 								this.$log(res)
 							} else {
 								this.$errMsg('试题数据修改失败')
 							}
-							this.getQuestionById(this.itemId)
+							
 						}).catch(err => {
 							this.$log(err)
-							this.$errMsg('试题数据修改失败')
-							this.getQuestionById(this.itemId)
+							// this.$errMsg('试题数据修改失败')
+							// this.getQuestionById(this.itemId)
 						})
 					}
 				})

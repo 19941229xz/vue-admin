@@ -17,24 +17,24 @@
 										<th scope="col">&nbsp;</th>
 
 
-										<th scope="col">主键 </th>
+										<!-- <th scope="col">主键 </th> -->
 										<th scope="col">试卷名称 </th>
-										<th scope="col">出题人id </th>
+										<!-- <th scope="col">出题人id </th> -->
 										<th scope="col">命题时间 </th>
-										<th scope="col">出题人头像 </th>
-										<th scope="col">出题人昵称 </th>
-										<th scope="col">出题人真实姓名 </th>
-										<th scope="col">试卷所属得岗位类型id </th>
-										<th scope="col">考试规定时长（单位秒） </th>
-										<th scope="col">试卷所属班级id </th>
-										<th scope="col">所属公司id </th>
-										<th scope="col">所属学校id </th>
-										<th scope="col">试卷可浏览级别 1完全公开 2对学校或公司公开 3只对班级公开 </th>
-										<th scope="col">试卷是否审核 1 未审核 2已审核 </th>
-										<th scope="col">审核人id </th>
+										<!-- <th scope="col">出题人头像 </th> -->
+										<!-- <th scope="col">出题人昵称 </th> -->
+										<th scope="col">出题人</th>
+										<th scope="col">所属岗位 </th>
+										<th scope="col">考试时长(秒) </th>
+										<th scope="col">所属班级</th>
+										<!-- <th scope="col">所属公司id </th> -->
+										<!-- <th scope="col">所属学校id </th> -->
+										<!-- <th scope="col">试卷可浏览级别 1完全公开 2对学校或公司公开 3只对班级公开 </th> -->
+										<th scope="col">是否审核1未审核2已审核 </th>
+										<!-- <th scope="col">审核人id </th> -->
 										<th scope="col">审核时间 </th>
-										<th scope="col">审核人真实姓名 </th>
-										<th scope="col">审核人昵称 </th>
+										<th scope="col">审核人 </th>
+										<!-- <th scope="col">审核人昵称 </th> -->
 										<th scope="col">&nbsp;</th>
 									</tr>
 								</thead>
@@ -44,41 +44,41 @@
 										<th v-show="!$superAdminMode" scope="row">&nbsp;</th>
 
 
-										<td @click="editItem(item)">{{item.id}}</td>
+										<!-- <td @click="editItem(item)">{{item.id}}</td> -->
 
 										<td @click="editItem(item)">{{item.examPaperName}}</td>
 
-										<td @click="editItem(item)">{{item.createUserId}}</td>
+										<!-- <td @click="editItem(item)">{{item.createUserId}}</td> -->
 
 										<td @click="editItem(item)">{{item.createDate}}</td>
 
-										<td @click="editItem(item)">{{item.userHeadPic}}</td>
+										<!-- <td @click="editItem(item)">{{item.userHeadPic}}</td> -->
 
-										<td @click="editItem(item)">{{item.userNickName}}</td>
+										<!-- <td @click="editItem(item)">{{item.userNickName}}</td> -->
 
 										<td @click="editItem(item)">{{item.userRealName}}</td>
 
-										<td @click="editItem(item)">{{item.questionJobTypeId}}</td>
+										<td @click="editItem(item)">{{item.questionJobTypeName}}</td>
 
 										<td @click="editItem(item)">{{item.examTime}}</td>
 
-										<td @click="editItem(item)">{{item.banjiId}}</td>
+										<td @click="editItem(item)">{{item.banjiName}}</td>
 
-										<td @click="editItem(item)">{{item.companyId}}</td>
+										<!-- <td @click="editItem(item)">{{item.companyId}}</td> -->
 
-										<td @click="editItem(item)">{{item.schoolId}}</td>
+										<!-- <td @click="editItem(item)">{{item.schoolId}}</td> -->
 
-										<td @click="editItem(item)">{{item.publicLevel}}</td>
+										<!-- <td @click="editItem(item)">{{item.publicLevel}}</td> -->
 
 										<td @click="editItem(item)">{{item.isChecked}}</td>
 
-										<td @click="editItem(item)">{{item.checkUserId}}</td>
+										<!-- <td @click="editItem(item)">{{item.checkUserId}}</td> -->
 
 										<td @click="editItem(item)">{{item.checkDate}}</td>
 
 										<td @click="editItem(item)">{{item.checkUserRealName}}</td>
 
-										<td @click="editItem(item)">{{item.checkUserNickName}}</td>
+										<!-- <td @click="editItem(item)">{{item.checkUserNickName}}</td> -->
 
 
 										<td v-show="$superAdminMode">
@@ -145,17 +145,21 @@
 			},
 			getMoreExampaperList: function() {
 				var that = this
-				that.searchData.pageNum++
+				
 				if (this.isLastPage) {
 					return
+				}else{
+					that.searchData.pageNum++
 				}
 				this.$http.post('/msbd/getAllExampaper', that.searchData).then(res => {
 					if (res.data.code == 200) {
+						
 						if (!res.data.content.isLastPage) {
 							this.exampaperList = this.exampaperList.concat(res.data.content.list)
 						} else {
 							this.$infoMsg('没有更多数据')
 							this.isLastPage = true
+							this.exampaperList = this.exampaperList.concat(res.data.content.list)
 						}
 						this.$log(this.exampaperList)
 					} else {

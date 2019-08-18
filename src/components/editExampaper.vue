@@ -67,11 +67,17 @@
 									 class="form-control validate" />
 									<span class="validateErrorSpan">{{ errors.first('出题人真实姓名') }}</span>
 								</div>
+								<div v-show="$superAdminMode" class="form-group mb-3">
+									<label for="questionJobTypeName">试卷所属得岗位</label>
+									<input id="questionJobTypeName" type="text" v-validate="'required'" name="试卷所属得岗位" v-model="exampaper.questionJobTypeName"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('试卷所属得岗位') }}</span>
+								</div>
 								<div class="form-group mb-3">
-									<label for="questionJobTypeId">试卷所属得岗位类型id</label>
+									<label for="questionJobTypeId">试卷所属得岗位</label>
 									<select v-validate="'required'" v-model="exampaper.questionJobTypeId" class="custom-select tm-select-accounts"
 									 id="questionJobTypeId">
-										<option v-for="(item,index) in questionjobtypeList" :value="item.id">{{item.questionJobTypeName}}</option>
+										<option  @click="exampaper.questionJobTypeName=item.questionJobTypeName" v-for="(item,index) in questionjobtypeList" :value="item.id">{{item.questionJobTypeName}}</option>
 									</select>
 								</div>
 								<div class="form-group mb-3">
@@ -184,6 +190,8 @@
 </template>
 
 <script>
+	import emailUtil from '.././util/emailUtil.js'
+	
 	export default {
 		name: 'editExampaper',
 		data() {
@@ -197,6 +205,7 @@
 					userNickName: '',
 					userRealName: '',
 					questionJobTypeId: '',
+					questionJobTypeName:'',
 					examTime: '',
 					banjiId: '',
 					companyId: '',
@@ -278,6 +287,15 @@
 								this.itemIsChanged='未编辑'
 								this.changeNum=0
 								this.$infoMsg('保存成功')
+								// 如果是普通用户 需要重新审核 那么又要通知到所有管理员  
+								if (!this.$superAdminMode) {
+									emailUtil.sendNormalEmailToAllAdmin('有试卷被编辑需重审',that.exampaper.questionJobTypeName+'岗位有试卷被编辑请尽快审核')
+								} else{
+									//  如果是管理员  则通知该题创建者  不论是否审核通过
+									// this.$router.push('/')
+									emailUtil.sendEmailByUserId('有试卷审核'+(that.exampaper.isChecked==1?'未通过':'通过'),that.exampaper.examPaperName+'审核'+(that.exampaper.isChecked==1?'未通过，请检查试卷信息':'通过，您的试卷已经成功上线，快去看看吧'),that.exampaper.createUserId)
+								}
+								//
 								this.$log(res)
 							} else {
 								this.$errMsg('试卷数据修改失败')

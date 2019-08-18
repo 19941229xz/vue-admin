@@ -64,7 +64,8 @@
 									<span class="validateErrorSpan">{{ errors.first('题目解析') }}</span> -->
 									<!-- <textarea class="form-control validate tm-small" rows="5" name="详细解释" v-validate="'required'" required>{{question.explaination}}</textarea> -->
 
-									<textarea class="form-control validate tm-small" rows="5" name="题目解析" v-model="question.explaination" v-validate="'required'" required></textarea>
+									<textarea class="form-control validate tm-small" rows="5" name="题目解析" v-model="question.explaination"
+									 v-validate="'required'" required></textarea>
 									<span class="validateErrorSpan">{{ errors.first('题目解析') }}</span>
 								</div>
 								<!-- <div class="form-group mb-3">
@@ -126,7 +127,8 @@
 								</div>
 								<div v-if="question.questionTypeId==3" class="form-group mb-3">
 									<label for="rightOption">正确选项</label>
-									<input id="rightOption" type="text" v-validate="'required|min:2'" name="正确选项" v-model="question.rightOption" class="form-control validate" />
+									<input id="rightOption" type="text" v-validate="'required|min:2'" name="正确选项" v-model="question.rightOption"
+									 class="form-control validate" />
 									<span class="validateErrorSpan">{{ errors.first('正确选项') }}</span>
 									<!-- <select @change="rightOptionChanged(question.rightOption)" v-validate="'required'" v-model="question.rightOption"
 									 class="custom-select tm-select-accounts" id="questionTypeId">
@@ -165,7 +167,8 @@
 									<!-- <input id="fullExplaination" type="text" v-validate="'required'" name="详细解释" v-model="question.fullExplaination"
 									 class="form-control validate" />
 									<span class="validateErrorSpan">{{ errors.first('详细解释') }}</span> -->
-									<textarea class="form-control validate tm-small" rows="5" name="详细解释" v-validate="'required'" v-model="question.fullExplaination" required></textarea>
+									<textarea class="form-control validate tm-small" rows="5" name="详细解释" v-validate="'required'" v-model="question.fullExplaination"
+									 required></textarea>
 									<span class="validateErrorSpan">{{ errors.first('详细解释') }}</span>
 								</div>
 								<!-- <div class="form-group mb-3">
@@ -319,6 +322,8 @@
 </template>
 
 <script>
+	import emailUtil from '.././util/emailUtil.js'
+
 	export default {
 		name: 'addQuestion',
 		data() {
@@ -420,6 +425,15 @@
 							if (res.data.code == 200) {
 								this.$log(res)
 								this.$infoMsg('添加成功')
+
+								// 邮件通知  如果是普通用户则通知到各个管理员  管理员用户自己添加不需要通知 只需要跳转到审核首页即可
+								if (!this.$superAdminMode) {
+									emailUtil.sendNormalEmailToAllAdmin('新试题待审核', that.question.questionJobTypeName + '岗位新增一题请尽快审核')
+								} else {
+									this.$router.push('/')
+								}
+								//
+
 								this.$router.push('/question')
 							} else {
 								this.$errMsg('添加失败')
@@ -467,7 +481,7 @@
 			},
 			getquestionjobtypeList: function() {
 				var that = this
-				that.searchData.model.isChecked=2
+				that.searchData.model.isChecked = 2
 				this.$http.post('/msbd/getAllQuestionjobtype', that.searchData).then(res => {
 					if (res.data.code == 200) {
 						this.questionjobtypeList = res.data.content.list

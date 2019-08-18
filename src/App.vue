@@ -44,7 +44,7 @@
 						<li class="nav-item">
 							<a class="nav-link" href="#/userCenter">
 								<i class="far fa-user"></i>
-								账户
+								个人中心
 							</a>
 						</li>
 						<li v-show="false" class="nav-item dropdown">
@@ -84,6 +84,9 @@
 	import bootstrap from '../static/js/bootstrap.min.js'
 	import tooplateScripts from '../static/js/tooplate-scripts.js'
 	import menus from './router/menu.js' //引入菜单数据
+	
+	//
+	// import emailUtil from './util/emailUtil.js'
 
 
 	export default {
@@ -133,6 +136,9 @@
 			// console.log(this.$getCookie('realName'))
 			this.$log(this.menuList.length)
 			this.getUserInfo()
+			
+			//test  emailUtil
+			// console.log(emailUtil.sendNormalEmail('test','test','972031129@qq.com'))
 		}
 	}
 </script>

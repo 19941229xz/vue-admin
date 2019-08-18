@@ -48,16 +48,16 @@
 									<span class="validateErrorSpan">{{ errors.first('出题人真实姓名') }}</span>
 								</div>
 								<div v-show="$superAdminMode" class="form-group mb-3">
-									<label for="questionJobTypeId">试卷所属得岗位类型id</label>
-									<input id="questionJobTypeId" type="text" v-validate="'required'" name="试卷所属得岗位类型id" v-model="exampaper.questionJobTypeId"
+									<label for="questionJobTypeName">试卷所属得岗位</label>
+									<input id="questionJobTypeName" type="text" v-validate="'required'" name="试卷所属得岗位" v-model="exampaper.questionJobTypeName"
 									 class="form-control validate" />
-									<span class="validateErrorSpan">{{ errors.first('试卷所属得岗位类型id') }}</span>
+									<span class="validateErrorSpan">{{ errors.first('试卷所属得岗位') }}</span>
 								</div>
 								<div class="form-group mb-3">
-									<label for="questionJobTypeId">试卷所属得岗位类型id</label>
+									<label for="questionJobTypeId">试卷所属得岗位</label>
 									<select v-validate="'required'" v-model="exampaper.questionJobTypeId" class="custom-select tm-select-accounts"
 									 id="questionJobTypeId">
-										<option v-for="(item,index) in questionjobtypeList" :value="item.id">{{item.questionJobTypeName}}</option>
+										<option @click="exampaper.questionJobTypeName=item.questionJobTypeName" v-for="(item,index) in questionjobtypeList" :value="item.id">{{item.questionJobTypeName}}</option>
 									</select>
 								</div>
 								<div v-show="$superAdminMode" class="form-group mb-3">
@@ -196,6 +196,8 @@
 </template>
 
 <script>
+	import emailUtil from '.././util/emailUtil.js'
+	
 	export default {
 		name: 'addExampaper',
 		data() {
@@ -210,6 +212,7 @@
 					userNickName: '',
 					userRealName: '',
 					questionJobTypeId: '',
+					questionJobTypeName:'',
 					examTime: '',
 					banjiId: '',
 					companyId: '',
@@ -259,6 +262,13 @@
 										if (res.data.code == 200) {
 											this.$log(res)
 											this.$infoMsg('添加成功')
+											// 邮件通知  如果是普通用户则通知到各个管理员  管理员用户自己添加不需要通知 只需要跳转到审核首页即可
+											if (!this.$superAdminMode) {
+												emailUtil.sendNormalEmailToAllAdmin('新试卷待审核', that.exampaper.questionJobTypeName + '岗位新增一份试卷请尽快审核')
+											} else {
+												this.$router.push('/')
+											}
+											//
 											this.$router.push('/exampaper')
 										} else {
 											this.$errMsg('添加失败')
@@ -291,6 +301,7 @@
 					if (res.data.code == 200) {
 						this.questionjobtypeList = res.data.content.list
 						this.exampaper.questionJobTypeId = res.data.content.list[0].id
+						this.exampaper.questionJobTypeName = res.data.content.list[0].questionJobTypeName
 						this.$log(this.questionjobtypeList)
 						this.$log(res.data)
 					} else {

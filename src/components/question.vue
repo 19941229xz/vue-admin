@@ -211,8 +211,9 @@
 				}
 				this.$http.post('/msbd/getAllQuestion', that.searchData).then(res => {
 					if (res.data.code == 200) {
+						this.questionList = this.questionList.concat(res.data.content.list)
 						if (!res.data.content.isLastPage) {
-							this.questionList = this.questionList.concat(res.data.content.list)
+							
 						} else {
 							this.$infoMsg('没有更多数据')
 							this.isLastPage = true

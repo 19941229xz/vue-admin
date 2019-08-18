@@ -23,6 +23,10 @@ var dataFroSuperAdmin = [
 		menuRoute:'',
 		childMenus:[
 			{
+				menuName:'用户管理',
+				menuRoute:'#/user'
+			},
+			{
 				menuName:'考试结果',
 				menuRoute:'#/examresult'
 			},
