@@ -337,7 +337,7 @@
 				this.$http.post('/user-server/getAllBanji', that.searchData).then(res => {
 					if (res.data.code == 200) {
 						this.banjiList = res.data.content.list
-						this.exampaper.banjiId = res.data.content.list[0].id
+						// this.exampaper.banjiId = res.data.content.list[0].id
 						this.$log(this.banjiList)
 						this.$log(res.data)
 					} else {
@@ -353,7 +353,7 @@
 				this.$http.post('/user-server/getAllSchool', that.searchData).then(res => {
 					if (res.data.code == 200) {
 						this.schoolList = res.data.content.list
-						this.exampaper.schoolId = res.data.content.list[0].id
+						// this.exampaper.schoolId = res.data.content.list[0].id
 						this.$log(this.schoolList)
 						this.$log(res.data)
 					} else {

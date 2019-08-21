@@ -51,7 +51,7 @@
 									<!-- <input id="examPaperId" type="text" v-validate="'required'" name="所属试卷id" v-model="question.examPaperId" class="form-control validate" />
 									<span class="validateErrorSpan">{{ errors.first('所属试卷id') }}</span> -->
 									<select v-validate="''" v-model="question.examPaperId" class="custom-select tm-select-accounts" id="examPaperId">
-										<option v-for="(item,index) in exampaperList" :value="item.id">{{item.examPaperName}}</option>
+										<option @click="setExampaperName(item)" v-for="(item,index) in exampaperList" :value="item.id">{{item.examPaperName}}</option>
 									</select>
 								</div>
 								<div class="form-group mb-3">
@@ -386,6 +386,7 @@
 					fullExplainationImg3: '',
 					fullExplainationImg4: '',
 					examPaperId: '',
+					examPaperName: '',
 					createUserId: '',
 					createUserHeadPic: '',
 					createUserRealName: '',
@@ -508,6 +509,9 @@
 			toQuestionList: function() {
 				this.$router.push('/question')
 			},
+			setExampaperName:function(item){
+				this.question.examPaperName = item.examPaperName
+			},
 			addImage: function(e) {
 				var that = this;
 				if (e.target.files.length !== 0) {
@@ -552,7 +556,7 @@
 				this.$http.post('/msbd/getAllExampaper', that.searchData).then(res => {
 					if (res.data.code == 200) {
 						this.exampaperList = res.data.content.list
-						this.question.examPaperId = res.data.content.list[0].id
+						// this.question.examPaperId = res.data.content.list[0].id
 						// 清空查询条件数据 以免对其他地方产生影响
 						this.searchData.model = {}
 						this.$log(this.exampaperList)
@@ -571,8 +575,8 @@
 				this.$http.post('/msbd/getAllQuestionjobtype', that.searchData).then(res => {
 					if (res.data.code == 200) {
 						this.questionjobtypeList = res.data.content.list
-						this.question.questionJobTypeId = res.data.content.list[0].id
-						this.question.questionJobTypeName = res.data.content.list[0].questionJobTypeName
+						// this.question.questionJobTypeId = res.data.content.list[0].id
+						// this.question.questionJobTypeName = res.data.content.list[0].questionJobTypeName
 						this.$log(this.questionjobtypeList)
 						this.$log(res.data)
 					} else {

@@ -71,7 +71,7 @@
 
 										<td @click="editItem(item)">{{item.totalQuestionCount}}</td>
 
-										<td @click="editItem(item)">{{item.wrongCount}}</td>
+										<td @click="editItem(item)">{{item.wrongAnswerCount}}</td>
 
 
 										<td v-show="$superAdminMode">

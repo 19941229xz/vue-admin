@@ -14,7 +14,7 @@
 								<!-- <form action="" class="tm-edit-product-form"> -->
 								<div class="form-group mb-3">
 									<label for="question">问题</label>
-									<input id="question" type="text" v-validate="'required|max:50|min:5'" name="问题" v-model="question.question"
+									<input id="question" type="text" v-validate="'required|max:80|min:5'" name="问题" v-model="question.question"
 									 class="form-control validate" />
 									<span class="validateErrorSpan">{{ errors.first('问题') }}</span>
 								</div>
@@ -47,7 +47,7 @@
 									<!-- <input id="examPaperId" type="text" v-validate="'required'" name="所属试卷id" v-model="question.examPaperId" class="form-control validate" />
 									<span class="validateErrorSpan">{{ errors.first('所属试卷id') }}</span> -->
 									<select v-validate="''" v-model="question.examPaperId" class="custom-select tm-select-accounts" id="examPaperId">
-										<option v-for="(item,index) in exampaperList" :value="item.id">{{item.examPaperName}}</option>
+										<option @click="setExampaperName(item)" v-for="(item,index) in exampaperList" :value="item.id">{{item.examPaperName}}</option>
 									</select>
 								</div>
 
@@ -331,11 +331,11 @@
 				question: {
 					id: '',
 					question: '',
-					answer: '',
+					answer: '见解析',
 					questionTypeId: '',
 					questionJobTypeId: '',
 					questionJobTypeName: '',
-					explaination: '',
+					explaination: '暂无',
 					explainationImg1: '',
 					explainationImg2: '',
 					explainationImg3: '',
@@ -355,6 +355,7 @@
 					fullExplainationImg3: '',
 					fullExplainationImg4: '',
 					examPaperId: '',
+					examPaperName: '',
 					createUserId: '',
 					createUserHeadPic: '',
 					createUserRealName: '',
@@ -543,6 +544,9 @@
 				// 	res = optionVal
 				// }
 				// this.question[targetIdStr]=res
+			},
+			setExampaperName:function(item){
+				this.question.examPaperName = item.examPaperName
 			},
 			questionTypeIdChanged: function(questionJobTypeId) {
 				if (questionJobTypeId != 1) {

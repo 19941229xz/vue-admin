@@ -12,83 +12,94 @@
 						<div class="row tm-edit-product-row">
 							<div class="col-xl-6 col-lg-6 col-md-12">
 								<!-- <form action="" class="tm-edit-product-form"> -->
-								
-								                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="userId">考试用户id</label>
-                                        <input id="userId" type="text" v-validate="'required'" name="考试用户id" v-model="examresult.userId" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('考试用户id') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="userNickName">考试人昵称</label>
-                                        <input id="userNickName" type="text" v-validate="'required'" name="考试人昵称" v-model="examresult.userNickName" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('考试人昵称') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="userRealName">考试人真实姓名</label>
-                                        <input id="userRealName" type="text" v-validate="'required'" name="考试人真实姓名" v-model="examresult.userRealName" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('考试人真实姓名') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="questionJobTypeId">问题所属得岗位类型id</label>
-                                        <input id="questionJobTypeId" type="text" v-validate="'required'" name="问题所属得岗位类型id" v-model="examresult.questionJobTypeId" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('问题所属得岗位类型id') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="questionJobTypeName">问题所属岗位名称</label>
-                                        <input id="questionJobTypeName" type="text" v-validate="'required'" name="问题所属岗位名称" v-model="examresult.questionJobTypeName" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('问题所属岗位名称') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="score">考试分数</label>
-                                        <input id="score" type="text" v-validate="'required'" name="考试分数" v-model="examresult.score" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('考试分数') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="companyId">考试者所属公司id</label>
-                                        <input id="companyId" type="text" v-validate="'required'" name="考试者所属公司id" v-model="examresult.companyId" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('考试者所属公司id') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="companyName">考试者所属公司名称</label>
-                                        <input id="companyName" type="text" v-validate="'required'" name="考试者所属公司名称" v-model="examresult.companyName" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('考试者所属公司名称') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="banjiId">考试者所属班级id</label>
-                                        <input id="banjiId" type="text" v-validate="'required'" name="考试者所属班级id" v-model="examresult.banjiId" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('考试者所属班级id') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="banjiName">考试者所属班级名称</label>
-                                        <input id="banjiName" type="text" v-validate="'required'" name="考试者所属班级名称" v-model="examresult.banjiName" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('考试者所属班级名称') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="exampaperId">所属试卷id</label>
-                                        <input id="exampaperId" type="text" v-validate="'required'" name="所属试卷id" v-model="examresult.exampaperId" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('所属试卷id') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="exampaperName">所属试卷名称</label>
-                                        <input id="exampaperName" type="text" v-validate="'required'" name="所属试卷名称" v-model="examresult.exampaperName" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('所属试卷名称') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="isFinished">是否完成考试  1未完成   2已完成</label>
-                                        <input id="isFinished" type="text" v-validate="'required'" name="是否完成考试  1未完成   2已完成" v-model="examresult.isFinished" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('是否完成考试  1未完成   2已完成') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="totalQuestionCount">考试总题数</label>
-                                        <input id="totalQuestionCount" type="text" v-validate="'required'" name="考试总题数" v-model="examresult.totalQuestionCount" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('考试总题数') }}</span>
-                                    </div>
-                                                                                                                                            <div class="form-group mb-3">
-                                        <label for="wrongCount">错题数</label>
-                                        <input id="wrongCount" type="text" v-validate="'required'" name="错题数" v-model="examresult.wrongCount" class="form-control validate" />
-                                        <span class="validateErrorSpan">{{ errors.first('错题数') }}</span>
-                                    </div>
-                                                                    								<!-- <div class="form-group mb-3">
+
+								<div class="form-group mb-3">
+									<label for="userId">考试用户id</label>
+									<input id="userId" type="text" v-validate="'required'" name="考试用户id" v-model="examresult.userId" class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('考试用户id') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="userNickName">考试人昵称</label>
+									<input id="userNickName" type="text" v-validate="'required'" name="考试人昵称" v-model="examresult.userNickName"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('考试人昵称') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="userRealName">考试人真实姓名</label>
+									<input id="userRealName" type="text" v-validate="'required'" name="考试人真实姓名" v-model="examresult.userRealName"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('考试人真实姓名') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="questionJobTypeId">问题所属得岗位类型id</label>
+									<input id="questionJobTypeId" type="text" v-validate="'required'" name="问题所属得岗位类型id" v-model="examresult.questionJobTypeId"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('问题所属得岗位类型id') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="questionJobTypeName">问题所属岗位名称</label>
+									<input id="questionJobTypeName" type="text" v-validate="'required'" name="问题所属岗位名称" v-model="examresult.questionJobTypeName"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('问题所属岗位名称') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="score">考试分数</label>
+									<input id="score" type="text" v-validate="'required'" name="考试分数" v-model="examresult.score" class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('考试分数') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="companyId">考试者所属公司id</label>
+									<input id="companyId" type="text" v-validate="'required'" name="考试者所属公司id" v-model="examresult.companyId"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('考试者所属公司id') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="companyName">考试者所属公司名称</label>
+									<input id="companyName" type="text" v-validate="'required'" name="考试者所属公司名称" v-model="examresult.companyName"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('考试者所属公司名称') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="banjiId">考试者所属班级id</label>
+									<input id="banjiId" type="text" v-validate="'required'" name="考试者所属班级id" v-model="examresult.banjiId" class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('考试者所属班级id') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="banjiName">考试者所属班级名称</label>
+									<input id="banjiName" type="text" v-validate="'required'" name="考试者所属班级名称" v-model="examresult.banjiName"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('考试者所属班级名称') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="exampaperId">所属试卷id</label>
+									<input id="exampaperId" type="text" v-validate="'required'" name="所属试卷id" v-model="examresult.exampaperId"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('所属试卷id') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="exampaperName">所属试卷名称</label>
+									<input id="exampaperName" type="text" v-validate="'required'" name="所属试卷名称" v-model="examresult.exampaperName"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('所属试卷名称') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="isFinished">是否完成考试 1未完成 2已完成</label>
+									<input id="isFinished" type="text" v-validate="'required'" name="是否完成考试  1未完成   2已完成" v-model="examresult.isFinished"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('是否完成考试  1未完成   2已完成') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="totalQuestionCount">考试总题数</label>
+									<input id="totalQuestionCount" type="text" v-validate="'required'" name="考试总题数" v-model="examresult.totalQuestionCount"
+									 class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('考试总题数') }}</span>
+								</div>
+								<div class="form-group mb-3">
+									<label for="wrongCount">错题数</label>
+									<input id="wrongCount" type="text" v-validate="'required'" name="错题数" v-model="examresult.wrongCount" class="form-control validate" />
+									<span class="validateErrorSpan">{{ errors.first('错题数') }}</span>
+								</div>
+								<!-- <div class="form-group mb-3">
 										<label for="description">Description</label>
 										<textarea class="form-control validate" rows="3" required></textarea>
 									</div>
@@ -144,24 +155,24 @@
 		data() {
 			return {
 				examresult: {
-					
-                                        id:'',
-                                        userId:'',
-                                        userNickName:'',
-                                        userRealName:'',
-                                        questionJobTypeId:'',
-                                        questionJobTypeName:'',
-                                        score:'',
-                                        companyId:'',
-                                        companyName:'',
-                                        banjiId:'',
-                                        banjiName:'',
-                                        exampaperId:'',
-                                        exampaperName:'',
-                                        isFinished:'',
-                                        totalQuestionCount:'',
-                                        wrongCount:'',
-                    				}
+
+					id: '',
+					userId: '',
+					userNickName: '',
+					userRealName: '',
+					questionJobTypeId: '',
+					questionJobTypeName: '',
+					score: '',
+					companyId: '',
+					companyName: '',
+					banjiId: '',
+					banjiName: '',
+					exampaperId: '',
+					exampaperName: '',
+					isFinished: '',
+					totalQuestionCount: '',
+					wrongCount: '',
+				}
 			}
 		},
 		methods: {
