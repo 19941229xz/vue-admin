@@ -129,13 +129,13 @@
 												break;
 										}
 									} else {
-										that.$setCookie('userId', res.data.content.list[0].id, 30 * 60)
-										that.$setCookie('companyId', res.data.content.list[0].companyId, 30 * 60)
-										that.$setCookie('schoolId', res.data.content.list[0].schoolId, 30 * 60)
-										that.$setCookie('realName', res.data.content.list[0].realName, 30 * 60)
-										that.$setCookie('roleId', res.data.content.list[0].roleId, 30 * 60)
-										that.$setCookie('headImg', res.data.content.list[0].headImg, 30 * 60)
-										that.$setCookie('nickName', res.data.content.list[0].nickName, 30 * 60)
+										that.$setCookie('userId', res.data.content.list[0].id, 24 * 60 * 60)
+										that.$setCookie('companyId', res.data.content.list[0].companyId, 24 * 60 * 60)
+										that.$setCookie('schoolId', res.data.content.list[0].schoolId, 24 * 60 * 60)
+										that.$setCookie('realName', res.data.content.list[0].realName, 24 * 60 * 60)
+										that.$setCookie('roleId', res.data.content.list[0].roleId, 24 * 60 * 60)
+										that.$setCookie('headImg', res.data.content.list[0].headImg, 24 * 60 * 60)
+										that.$setCookie('nickName', res.data.content.list[0].nickName, 24 * 60 * 60)
 										
 										// console.log(that.$getCookie('lastHref'))
 										// debugger
