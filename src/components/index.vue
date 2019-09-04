@@ -44,6 +44,24 @@
 						</div>
 					</div>
 				</div>
+				<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
+					<div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-overflow">
+						<h2 class="tm-block-title">待审核课程({{courseList.length}})</h2>
+						<div class="tm-notification-items">
+							<!--  -->
+							<div @click="editCourse(item)" v-for="item in courseList" class="media tm-notification-item">
+								<div class="tm-gray-circle"><img :src="item.courseQrcode" alt="Avatar Image" style="width: 100%;height: 100%;"
+									 class="rounded-circle"></div>
+								<div class="media-body">
+									<p class="mb-2"><b>{{item.createUserRealName}}</b> 创建了 <b>一份</b> {{item.questionJobTypeName}} 试卷《{{item.courseName}}》.
+										请尽快审核.</p>
+									<span class="tm-small tm-text-color-secondary">{{item.createDate | dateformat}}.</span>
+								</div>
+							</div>
+							<!--  -->
+						</div>
+					</div>
+				</div>
 				<div v-show="questionjobtypeList.length!=0" class="col-sm-12 col-md-12 col-lg-6 col-xl-6 tm-block-col">
 					<div class="tm-bg-primary-dark tm-block tm-block-taller tm-block-overflow">
 						<h2 class="tm-block-title">待审核岗位({{questionjobtypeList.length}})</h2>
@@ -260,6 +278,7 @@
 				exampaperList: [], // 待审核数据
 				questionList: [],
 				questionjobtypeList: [],
+				courseList: [],
 				userList: [], // 
 				searchData: {
 					"model": {
@@ -323,6 +342,27 @@
 					console.log(err)
 				})
 			},
+			getCourseList: function() {
+				var that = this
+				// if(this.$superAdminMode==false){ // 如果不是超级管理员模式  那么用户只能看见自己所属公司创建的数据  但是只能修改自己创建的
+				// 	that.searchData.model.companyId=that.$getCookie('companyId')
+				// }else{
+				// 	delete that.searchData.model.companyId
+				// }
+				that.searchData.model.isChecked = 1
+				this.$http.post('/msbd/getAllCourse', that.searchData).then(res => {
+					if (res.data.code == 200) {
+						this.courseList = res.data.content.list
+						this.$log(this.courseList)
+						this.$log(res.data)
+					} else {
+						this.$errMsg('未审核课程数据加载失败')
+					}
+				}).catch(err => {
+					this.$errMsg('未审核课程数据加载失败')
+					console.log(err)
+				})
+			},
 			getQuestionList: function() {
 				var that = this
 				that.searchData.model.isChecked = 1
@@ -383,6 +423,14 @@
 					}
 				})
 			},
+			editCourse:function(item){
+				this.$router.push({
+					path: '/editCourse',
+					query: {
+						id: item.id
+					}
+				})
+			},
 			editQuestion: function(item) {
 				//在非超管模式  用户只允许修改自己创建的试卷
 				// if(!this.$superAdminMode&&this.$getCookie('userId')!=item.createUserId){
@@ -435,6 +483,7 @@
 			this.getQuestionList()
 			this.getQuestionjobtypeList()
 			this.getUserList()
+			this.getCourseList()
 
 
 		}
