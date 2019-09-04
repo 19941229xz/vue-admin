@@ -394,23 +394,6 @@
 						return
 					}
 				}
-				// 给正确选项添加  隐藏字符串
-				// switch (this.question.rightOption) {
-				// 	case 'A':
-				// 		this.question.optionA += '*#1002'
-				// 		break;
-				// 	case 'B':
-				// 		this.question.optionB += '*#1002'
-				// 		break;
-				// 	case 'C':
-				// 		this.question.optionC += '*#1002'
-				// 		break;
-				// 	case 'D':
-				// 		this.question.optionD += '*#1002'
-				// 		break;
-				// 	default:
-				// 		break;
-				// }
 
 				this.$validator.validate().then(valid => {
 					if (!valid) {

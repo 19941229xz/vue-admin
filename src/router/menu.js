@@ -15,6 +15,10 @@ var dataFroSuperAdmin = [
 			{
 				menuName:'试题所属职位',
 				menuRoute:'#/questionjobtype'
+			},
+			{
+				menuName:'课程',
+				menuRoute:'#/course'
 			}
 		]
 	},
@@ -45,6 +49,10 @@ var dataFroSuperAdmin = [
 			{
 				menuName:'用户错题记录',
 				menuRoute:'#/userquestionwrong'
+			},
+			{
+				menuName:'积分交易记录',
+				menuRoute:'#/pointslog'
 			}
 		]
 	}
@@ -71,6 +79,10 @@ var dataFroGeneralUser = [
 			{
 				menuName:'试题所属职位',
 				menuRoute:'#/questionjobtype'
+			},
+			{
+				menuName:'课程',
+				menuRoute:'#/course'
 			}
 		]
 	},

@@ -34,6 +34,12 @@ import editUseranserquestion from '@/components/editUseranserquestion'
 import userquestionwrong from '@/components/userquestionwrong'
 import addUserquestionwrong from '@/components/addUserquestionwrong'
 import editUserquestionwrong from '@/components/editUserquestionwrong'
+import pointslog from '@/components/pointslog'
+import addPointslog from '@/components/addPointslog'
+import editPointslog from '@/components/editPointslog'
+import course from '@/components/course'
+import addCourse from '@/components/addCourse'
+import editCourse from '@/components/editCourse'
 
 Vue.use(Router)
 
@@ -83,8 +89,8 @@ export default new Router({
 			name: 'reg',
 			component: reg
 		}
-		
-		
+
+
 		, {
 			path: '/exampaper',
 			name: 'exampaper',
@@ -181,6 +187,31 @@ export default new Router({
 			path: '/editUserquestionwrong',
 			name: 'editUserquestionwrong',
 			component: editUserquestionwrong
+		}, {
+			path: '/pointslog',
+			name: 'pointslog',
+			component: pointslog
+		}, {
+			path: '/addPointslog',
+			name: 'addPointslog',
+			component: addPointslog
+		}, {
+			path: '/editPointslog',
+			name: 'editPointslog',
+			component: editPointslog
+		}, {
+			path: '/course',
+			name: 'course',
+			component: course
+		}, {
+			path: '/addCourse',
+			name: 'addCourse',
+			component: addCourse
+		}, {
+			path: '/editCourse',
+			name: 'editCourse',
+			component: editCourse
 		}
+
 	]
 })
